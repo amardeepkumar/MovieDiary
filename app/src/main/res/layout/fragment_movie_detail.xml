@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+
+        <import type="android.view.View" />
+
+        <import type="android.text.TextUtils" />
+
+        <variable
+            name="data"
+            type="com.udacity.moviediary.model.response.MovieResult" />
+
+        <variable
+            name="clickHandler"
+            type="android.view.View.OnClickListener" />
+
+        <variable
+            name="trailerCount"
+            type="int" />
+
+        <variable
+            name="reviewCount"
+            type="int" />
+
+    </data>
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@android:color/white">
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/dp_4"
+                android:paddingBottom="@dimen/dp_10"
+                android:visibility="@{data != null ? View.VISIBLE: View.GONE}">
+
+                <ImageView
+                    android:id="@+id/poster_image"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/dp_260"
+                    android:contentDescription="@string/movie_detail_image"
+                    android:scaleType="fitXY"
+                    app:imageUrl="@{data.posterPath ?? data.backdropPath}" />
+
+                <ImageView
+                    android:id="@+id/favourite"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentEnd="true"
+                    android:layout_alignParentRight="true"
+                    android:onClick="@{clickHandler.onClick}"
+                    android:padding="@dimen/dp_10"
+                    android:src="@{data.favourite ? @drawable/your_wish_list_1 : @drawable/your_wish_list}" />
+
+
+                <TextView
+                    android:id="@+id/title"
+                    style="@style/movie_name_style"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/poster_image"
+                    android:text="@{data.originalTitle}"
+                    android:visibility="@{!TextUtils.isEmpty(data.originalTitle) ? View.VISIBLE: View.GONE}" />
+
+                <TextView
+                    android:id="@+id/release_date"
+                    style="@style/movie_detail_text_style"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/title"
+                    android:text="@{@string/released_date(data.releaseDate)}"
+                    android:visibility="@{!TextUtils.isEmpty(data.releaseDate) ? View.VISIBLE: View.GONE}" />
+
+                <TextView
+                    android:id="@+id/vote_average"
+                    style="@style/movie_detail_text_style"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/release_date"
+                    android:text="@{@string/vote_average(data.voteAverage)}"
+                    android:visibility="@{data.voteAverage != 0 ? View.VISIBLE: View.GONE}" />
+
+                <TextView
+                    android:id="@+id/plot_synopsis"
+                    style="@style/movie_detail_text_style"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/vote_average"
+                    android:text="@{data.overview}"
+                    android:visibility="@{!TextUtils.isEmpty(data.overview) ? View.VISIBLE: View.GONE}" />
+
+                <TextView
+                    android:id="@+id/trailers"
+                    style="@style/movie_name_style"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/plot_synopsis"
+                    android:text="@string/trailers"
+                    android:visibility="@{trailerCount > 0 ? View.VISIBLE: View.GONE}" />
+
+                <LinearLayout
+                    android:id="@+id/movie_detail_trailer_layout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/trailers"
+                    android:orientation="vertical" />
+
+                <TextView
+                    android:id="@+id/reviews"
+                    style="@style/movie_name_style"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/movie_detail_trailer_layout"
+                    android:text="@string/reviews"
+                    android:visibility="@{reviewCount > 0 ? View.VISIBLE: View.GONE}" />
+
+                <LinearLayout
+                    android:id="@+id/movie_detail_review_layout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/reviews"
+                    android:orientation="vertical" />
+            </RelativeLayout>
+        </ScrollView>
+
+        <ProgressBar
+            android:id="@+id/progressBar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:visibility="gone" />
+    </FrameLayout>
+</layout>
