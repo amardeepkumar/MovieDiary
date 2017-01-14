@@ -25,7 +25,7 @@ public class NetworkManager {
     private static ApiService apiService;
     private static Retrofit getRetroFit() {
         HttpLoggingInterceptor interceptor = new HttpLoggingInterceptor();
-        interceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
+        interceptor.setLevel(HttpLoggingInterceptor.Level.BASIC);
         OkHttpClient client = new OkHttpClient.Builder().addInterceptor(interceptor).build();
 
         return  new Retrofit.Builder()

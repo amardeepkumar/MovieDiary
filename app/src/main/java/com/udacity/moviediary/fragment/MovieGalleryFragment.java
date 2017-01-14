@@ -274,7 +274,7 @@ public class MovieGalleryFragment extends BaseFragment  implements LoaderManager
 
     private void saveDataAndUpdateUi(Response<DiscoverMovieResponse> response) {
         loading = false;
-        if (response != null && response.isSuccess()
+        if (response != null && response.isSuccessful()
                 && response.body() != null) {
             mCurrentPage = response.body().getPage();
 
