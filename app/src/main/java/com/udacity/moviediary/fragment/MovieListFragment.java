@@ -8,6 +8,7 @@ import android.database.Cursor;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
@@ -42,10 +43,10 @@ import retrofit2.Response;
 /**
  * Created by Amardeep on 18/2/16.
  */
-public class MovieGalleryFragment extends BaseFragment  implements LoaderManager.LoaderCallbacks<Cursor>,
+public class MovieListFragment extends BaseFragment  implements LoaderManager.LoaderCallbacks<Cursor>,
         Callback<DiscoverMovieResponse> {
 
-    private static final String TAG = MovieGalleryFragment.class.getSimpleName();
+    private static final String TAG = MovieListFragment.class.getSimpleName();
 
     private static final String[] MOVIE_PROJECTION = {
             MovieContract.MovieEntry._ID,
@@ -92,7 +93,8 @@ public class MovieGalleryFragment extends BaseFragment  implements LoaderManager
 
             ArrayList<ContentProviderOperation> ops = new ArrayList<>();
             ops.add(ContentProviderOperation.newDelete(MovieContract.MovieEntry.CONTENT_URI)
-                    .withSelection(null, null)
+                    .withSelection(MovieContract.MovieEntry.TABLE_NAME + "."
+                            + MovieContract.MovieEntry.COLUMN_FAVOURITE + " = ?", new String[]{"0"})
                     .build());
             ops.add(ContentProviderOperation.newDelete(MovieContract.VideoEntry.CONTENT_URI)
                     .withSelection(null, null)
@@ -110,6 +112,14 @@ public class MovieGalleryFragment extends BaseFragment  implements LoaderManager
             binding.progressBar.setVisibility(View.GONE);
         }
     };
+
+    public static Fragment getInstance(boolean isFavouriteMode) {
+        MovieListFragment movieListFragment = new MovieListFragment();
+        Bundle args = new Bundle();
+        args.putBoolean(Constants.BundleKeys.IS_FAVOURITE_MODE, isFavouriteMode);
+        movieListFragment.setArguments(args);
+        return movieListFragment;
+    }
 
     @Override
     public void onAttach(Context context) {
@@ -152,37 +162,38 @@ public class MovieGalleryFragment extends BaseFragment  implements LoaderManager
         binding.movieList.setLayoutManager(gridLayoutManager);
         binding.movieList.setAdapter(new MovieGalleryCursorAdapter(mContext, null, mItemClickListener));
 
-        //Infinite loading
-        mOnScrollListener = new RecyclerView.OnScrollListener() {
-            @Override
-            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
-                /*check for scroll down*/
-                if (dy > 0) {
-                    visibleItemCount = gridLayoutManager.getChildCount();
-                    totalItemCount = gridLayoutManager.getItemCount();
-                    firstVisibleItem = gridLayoutManager.findFirstCompletelyVisibleItemPosition();
+        boolean isFavMode = false;
 
-                    if (!loading) {
-                        if ((visibleItemCount + firstVisibleItem) >= totalItemCount) {
-                            loadMore(MovieGalleryFragment.this);
+        if (getArguments() != null) {
+            isFavMode = getArguments().getBoolean(Constants.BundleKeys.IS_FAVOURITE_MODE);
+
+            //Add listener if sort pref is not SORT_BY_FAVOURITE
+            if (!isFavMode) {
+                mOnScrollListener = new RecyclerView.OnScrollListener() {
+                    @Override
+                    public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                        /*check for scroll down*/
+                        if (dy > 0) {
+                            visibleItemCount = gridLayoutManager.getChildCount();
+                            totalItemCount = gridLayoutManager.getItemCount();
+                            firstVisibleItem = gridLayoutManager.findFirstCompletelyVisibleItemPosition();
+
+                            if (!loading) {
+                                if ((visibleItemCount + firstVisibleItem) >= totalItemCount) {
+                                    loadMore(MovieListFragment.this);
+                                }
+                            }
                         }
                     }
-                }
+                };
+                binding.movieList.addOnScrollListener(mOnScrollListener); //Infinite loading
             }
-        };
-
-        final int sortPref = PreferenceManager.getInstance().getInt(Constants.BundleKeys.SORT_PREFERENCE,
-                Constants.SortPreference.SORT_BY_POPULARITY);
-        //Add listener if sort pref is not SORT_BY_FAVOURITE
-        if (sortPref != Constants.SortPreference.SORT_BY_FAVOURITE) {
-            binding.movieList.addOnScrollListener(mOnScrollListener);
         }
 
         //Initial loading the data if fresh launch
-        if (savedInstanceState == null && sortPref != Constants.SortPreference.SORT_BY_FAVOURITE) {
+        if (savedInstanceState == null && !isFavMode) {
             loadMore(this);
         }
-
         return binding.getRoot();
     }
 
@@ -209,14 +220,8 @@ public class MovieGalleryFragment extends BaseFragment  implements LoaderManager
                 }
                 return true;
 
-            case R.id.list_favourite:
-                if (!item.isChecked()) {
-                    //Remove pagination while user selects to see favourite movie list
-                    binding.movieList.clearOnScrollListeners();
-                    PreferenceManager.getInstance().setInt(Constants.BundleKeys.SORT_PREFERENCE,
-                            Constants.SortPreference.SORT_BY_FAVOURITE);
-                    getLoaderManager().restartLoader(MOVIE_GALLERY_LOADER, null, this);
-                }
+            case R.id.app_bar_search:
+                // User chose the "Settings" item, show the app settings UI...
                 return true;
 
             default:
@@ -317,13 +322,9 @@ public class MovieGalleryFragment extends BaseFragment  implements LoaderManager
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
         String[] selectionArgs = null;
         String selection = null;
-        switch (PreferenceManager.getInstance().getInt(Constants.BundleKeys.SORT_PREFERENCE,
-                Constants.SortPreference.SORT_BY_POPULARITY)) {
-            case Constants.SortPreference.SORT_BY_FAVOURITE:
-                selection = MovieContract.MovieEntry.COLUMN_FAVOURITE + " = ?";
-                selectionArgs = new String[]{"1"};
-                break;
-
+        if (getArguments() != null && getArguments().getBoolean(Constants.BundleKeys.IS_FAVOURITE_MODE)) {
+            selection = MovieContract.MovieEntry.COLUMN_FAVOURITE + " = ?";
+            selectionArgs = new String[]{"1"};
         }
 
         return new CursorLoader(mContext,

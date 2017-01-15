@@ -55,10 +55,9 @@ public class MovieContract {
             return ContentUris.withAppendedId(CONTENT_URI, id);
         }
 
-
         public static Uri buildMovieTrailerWithReview() {
-            return CONTENT_URI.buildUpon().appendPath("trailer")
-                    .appendPath("review").build();
+            return CONTENT_URI.buildUpon().appendPath(PATH_VIDEO)
+                    .appendPath(PATH_REVIEW).build();
         }
     }
 

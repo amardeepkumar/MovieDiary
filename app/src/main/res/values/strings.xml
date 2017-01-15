@@ -13,4 +13,6 @@
     <string name="trailers">Trailers</string>
     <string name="reviews">Reviews</string>
     <string name="search_title">Search</string>
+    <string name="movies">Movies</string>
+    <string name="favourites">Favourites</string>
 </resources>

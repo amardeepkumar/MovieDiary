@@ -1,8 +1,11 @@
 package com.udacity.moviediary.activity;
 
+import android.app.SearchManager;
+import android.content.Context;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
+import android.support.v7.widget.SearchView;
 import android.view.Menu;
 import android.view.MenuInflater;
 
@@ -10,7 +13,7 @@ import com.udacity.moviediary.R;
 import com.udacity.moviediary.adapter.MovieGalleryCursorAdapter;
 import com.udacity.moviediary.databinding.ActivityMovieBinding;
 import com.udacity.moviediary.fragment.MovieDetailFragment;
-import com.udacity.moviediary.fragment.MovieGalleryFragment;
+import com.udacity.moviediary.fragment.MovieMasterFragment;
 import com.udacity.moviediary.utility.Constants;
 import com.udacity.moviediary.utility.PreferenceManager;
 
@@ -18,14 +21,14 @@ import com.udacity.moviediary.utility.PreferenceManager;
  * Class to show the Movie related UI
  * Created by Amardeep on 18/2/16.
  */
-public class MovieActivity extends BaseActivity implements MovieGalleryCursorAdapter.OnItemClickListener {
+public class MovieActivity extends BaseActivity implements MovieGalleryCursorAdapter.OnItemClickListener, SearchView.OnQueryTextListener {
     private MovieDetailFragment mMovieDetailFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         ActivityMovieBinding binding = DataBindingUtil.setContentView(this, R.layout.activity_movie);
-        binding.toolbar.setTitle(R.string.app_name);
+//        binding.toolbar.setTitle(R.string.app_name);
         setSupportActionBar(binding.toolbar);
 
         if (getResources().getBoolean(R.bool.isTablet)) {
@@ -37,10 +40,10 @@ public class MovieActivity extends BaseActivity implements MovieGalleryCursorAda
                 }
 
                 // Create a new Fragment to be placed in the activity layout
-                MovieGalleryFragment firstFragment = new MovieGalleryFragment();
-                firstFragment.setArguments(getIntent().getExtras());
+                MovieMasterFragment movieMasterFragment = new MovieMasterFragment();
+                movieMasterFragment.setArguments(getIntent().getExtras());
                 getSupportFragmentManager().beginTransaction()
-                        .add(R.id.fragment_container, firstFragment).commit();
+                        .add(R.id.fragment_container, movieMasterFragment).commit();
             }
         }
     }
@@ -59,17 +62,31 @@ public class MovieActivity extends BaseActivity implements MovieGalleryCursorAda
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.menu_main, menu);
-        return true;
+        SearchView searchView = (SearchView) menu.findItem(R.id.app_bar_search).getActionView();
+
+//        (SearchView) MenuItemCompat.getActionView(searchItem);
+
+        SearchManager searchManager = (SearchManager)
+                getSystemService(Context.SEARCH_SERVICE);
+        if (searchView != null) {
+            searchView.setSearchableInfo(searchManager.
+                    getSearchableInfo(getComponentName()));
+            searchView.setIconifiedByDefault(false);
+            searchView.setSubmitButtonEnabled(true);
+            searchView.setOnQueryTextListener(this);
+        }
+
+        return super.onCreateOptionsMenu(menu);
     }
 
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
         if (!getResources().getBoolean(R.bool.isTablet)
-                && getSupportFragmentManager().findFragmentById(R.id.fragment_container)instanceof MovieDetailFragment) {
+                && getSupportFragmentManager().findFragmentById(R.id.fragment_container) instanceof MovieDetailFragment) {
             //Hiding menu for detail fragment in case of phone
             menu.findItem(R.id.sort_by_popular).setVisible(false);
             menu.findItem(R.id.sort_by_highest_rated).setVisible(false);
-            menu.findItem(R.id.list_favourite).setVisible(false);
+//            menu.findItem(R.id.list_favourite).setVisible(false);
         } else {
             switch (PreferenceManager.getInstance().getInt(Constants.BundleKeys.SORT_PREFERENCE,
                     Constants.SortPreference.SORT_BY_POPULARITY)) {
@@ -79,10 +96,9 @@ public class MovieActivity extends BaseActivity implements MovieGalleryCursorAda
                 case Constants.SortPreference.SORT_BY_VOTE_AVG:
                     menu.findItem(R.id.sort_by_highest_rated).setChecked(true);
                     break;
-                case Constants.SortPreference.SORT_BY_FAVOURITE:
+                /*case Constants.SortPreference.SORT_BY_FAVOURITE:
                     menu.findItem(R.id.list_favourite).setChecked(true);
-                    break;
-
+                    break;*/
             }
         }
 
@@ -99,5 +115,15 @@ public class MovieActivity extends BaseActivity implements MovieGalleryCursorAda
                 actionBar.setDisplayHomeAsUpEnabled(false);
             }
         }
+    }
+
+    @Override
+    public boolean onQueryTextSubmit(String query) {
+        return false;
+    }
+
+    @Override
+    public boolean onQueryTextChange(String newText) {
+        return false;
     }
 }

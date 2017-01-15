@@ -15,7 +15,7 @@ import com.udacity.moviediary.R;
 import com.udacity.moviediary.data.CustomAsyncQueryHandler;
 import com.udacity.moviediary.data.MovieContract;
 import com.udacity.moviediary.databinding.ItemMovieGalleryBinding;
-import com.udacity.moviediary.fragment.MovieGalleryFragment;
+import com.udacity.moviediary.fragment.MovieListFragment;
 import com.udacity.moviediary.model.response.MovieResult;
 import com.udacity.moviediary.utility.Constants;
 import com.udacity.moviediary.utility.DatabaseUtils;
@@ -57,11 +57,11 @@ public class MovieGalleryCursorAdapter extends CursorRecyclerViewAdapter<MovieGa
 
     private MovieResult getMovieResultFromCursor(Cursor cursor) {
         MovieResult movie = new MovieResult();
-        movie.setId(cursor.getString(MovieGalleryFragment.COLUMN_MOVIE_ID));
-        movie.setBackdropPath(cursor.getString(MovieGalleryFragment.COLUMN_BACK_DROP_PATH));
-        movie.setPosterPath(cursor.getString(MovieGalleryFragment.COLUMN_POSTER_PATH));
-        movie.setFavourite(cursor.getInt(MovieGalleryFragment.COLUMN_FAVOURITE) > 0);
-        movie.setSelected(cursor.getInt(MovieGalleryFragment.COLUMN_IS_SELECTED) > 0);
+        movie.setId(cursor.getString(MovieListFragment.COLUMN_MOVIE_ID));
+        movie.setBackdropPath(cursor.getString(MovieListFragment.COLUMN_BACK_DROP_PATH));
+        movie.setPosterPath(cursor.getString(MovieListFragment.COLUMN_POSTER_PATH));
+        movie.setFavourite(cursor.getInt(MovieListFragment.COLUMN_FAVOURITE) > 0);
+        movie.setSelected(cursor.getInt(MovieListFragment.COLUMN_IS_SELECTED) > 0);
         return movie;
     }
 
@@ -83,52 +83,57 @@ public class MovieGalleryCursorAdapter extends CursorRecyclerViewAdapter<MovieGa
             final int adapterPosition = getAdapterPosition();
 
             if (mCursor != null && mCursor.moveToPosition(adapterPosition)) {
-                final String movieId = mCursor.getString(MovieGalleryFragment.COLUMN_MOVIE_ID);
-                final String rowId = mCursor.getString(MovieGalleryFragment.COLUMN_ID);
+                final String movieId = mCursor.getString(MovieListFragment.COLUMN_MOVIE_ID);
+                final String rowId = mCursor.getString(MovieListFragment.COLUMN_ID);
 
-                //Check for previous selection.
-                if (previousSelection != adapterPosition) {
-                    //Update the row in database for election
-                    CustomAsyncQueryHandler queryHandler = new CustomAsyncQueryHandler(view.getContext().getContentResolver());
+                //Selection logic needed for tablet
+                if (view.getContext().getResources().getBoolean(R.bool.isTablet)) {
+                    //Check for previous selection.
+                    if (previousSelection != adapterPosition) {
+                        //Update the row in database for election
+                        CustomAsyncQueryHandler queryHandler = new CustomAsyncQueryHandler(view.getContext().getContentResolver());
 
-                    ContentValues values = new ContentValues();
-                    values.put(MovieContract.MovieEntry.COLUMN_IS_SELECTED, 1);
+                        ContentValues values = new ContentValues();
+                        values.put(MovieContract.MovieEntry.COLUMN_IS_SELECTED, 1);
 
-                    //Setting the batch listener
-                    queryHandler.setAsyncApplyBatchListener(new CustomAsyncQueryHandler.AsyncApplyBatchListener() {
-                        @Override
-                        public void onApplyBatchComplete(int token, Object cookie, ContentProviderResult[] result) {
-                            mOnItemClickListener.OnItemClicked(movieId);
-                        }
-                    });
+                        //Setting the batch listener
+                        queryHandler.setAsyncApplyBatchListener(new CustomAsyncQueryHandler.AsyncApplyBatchListener() {
+                            @Override
+                            public void onApplyBatchComplete(int token, Object cookie, ContentProviderResult[] result) {
+                                mOnItemClickListener.OnItemClicked(movieId);
+                            }
+                        });
 
-                    //Create the operations
-                    ArrayList<ContentProviderOperation> ops = new ArrayList<>();
-                    ops.add(ContentProviderOperation.newUpdate(MovieContract.MovieEntry.CONTENT_URI)
-                                    .withSelection(MovieContract.MovieEntry._ID + " = ?",
-                                            new String[]{rowId})
-                                    .withValue(MovieContract.MovieEntry.COLUMN_IS_SELECTED, 1)
-                                    .build());
-                    if (mCursor.moveToPosition(previousSelection)) {
+                        //Create the operations
+                        ArrayList<ContentProviderOperation> ops = new ArrayList<>();
                         ops.add(ContentProviderOperation.newUpdate(MovieContract.MovieEntry.CONTENT_URI)
                                 .withSelection(MovieContract.MovieEntry._ID + " = ?",
-                                        new String[]{mCursor.getString(MovieGalleryFragment.COLUMN_ID)})
-                                .withValue(MovieContract.MovieEntry.COLUMN_IS_SELECTED, 0)
+                                        new String[]{rowId})
+                                .withValue(MovieContract.MovieEntry.COLUMN_IS_SELECTED, 1)
                                 .build());
-                    }
+                        if (mCursor.moveToPosition(previousSelection)) {
+                            ops.add(ContentProviderOperation.newUpdate(MovieContract.MovieEntry.CONTENT_URI)
+                                    .withSelection(MovieContract.MovieEntry._ID + " = ?",
+                                            new String[]{mCursor.getString(MovieListFragment.COLUMN_ID)})
+                                    .withValue(MovieContract.MovieEntry.COLUMN_IS_SELECTED, 0)
+                                    .build());
+                        }
 
-                    queryHandler.applyBatch(1, null, MovieContract.CONTENT_AUTHORITY, ops);
+                        queryHandler.applyBatch(1, null, MovieContract.CONTENT_AUTHORITY, ops);
+                        //Setting the selection to clicked item
+                        previousSelection = adapterPosition;
+                        PreferenceManager.getInstance().setInt(Constants.PREV_SELECTION, previousSelection);
+                    }
+                } else {
+                    mOnItemClickListener.OnItemClicked(movieId);
                 }
-                //Setting the selection to clicked item
-                previousSelection = adapterPosition;
-                PreferenceManager.getInstance().setInt(Constants.PREV_SELECTION, previousSelection);
             }
         }
 
         public void OnFavouriteClicked(View view) {
             if (mCursor != null && mCursor.moveToPosition(getAdapterPosition())) {
-                DatabaseUtils.setFavourite(view.getContext(), mCursor.getString(MovieGalleryFragment.COLUMN_MOVIE_ID),
-                        mCursor.getInt(MovieGalleryFragment.COLUMN_FAVOURITE) == 0 ? 1 : 0);
+                DatabaseUtils.setFavourite(view.getContext(), mCursor.getString(MovieListFragment.COLUMN_MOVIE_ID),
+                        mCursor.getInt(MovieListFragment.COLUMN_FAVOURITE) == 0 ? 1 : 0);
             }
         }
     }

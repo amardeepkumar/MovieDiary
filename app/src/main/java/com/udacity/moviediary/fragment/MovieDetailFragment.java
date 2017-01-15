@@ -207,7 +207,7 @@ public class MovieDetailFragment extends BaseFragment implements View.OnClickLis
             case R.id.favourite:
                 if (mCursor != null && mMovieId != null  && mCursor.moveToFirst()) {
                     DatabaseUtils.setFavourite(v.getContext(), mMovieId,
-                            mCursor.getInt(MovieGalleryFragment.COLUMN_FAVOURITE) == 0 ? 1 : 0);
+                            mCursor.getInt(MovieListFragment.COLUMN_FAVOURITE) == 0 ? 1 : 0);
                 }
                 break;
             case R.id.trailer:
