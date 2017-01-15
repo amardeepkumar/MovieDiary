@@ -16,10 +16,13 @@
             android:checked="true"
             android:title="@string/sort_by_popular" />
         <item
-            android:id="@+id/sort_by_highest_rated"
-            android:title="@string/sort_by_highest_rated" />
-        <!--<item
-            android:id="@+id/list_favourite"
-            android:title="@string/list_favourite" />-->
+            android:id="@+id/sort_by_release_date"
+            android:title="@string/sort_by_release_date" />
+        <item
+            android:id="@+id/sort_by_rating"
+            android:title="@string/sort_by_rating" />
+        <item
+            android:id="@+id/sort_by_name"
+            android:title="@string/sort_by_name" />
     </group>
 </menu>

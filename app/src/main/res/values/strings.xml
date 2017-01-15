@@ -1,7 +1,9 @@
 <resources>
     <string name="app_name">Movie Diary</string>
-    <string name="sort_by_popular">Sort by most popular</string>
-    <string name="sort_by_highest_rated">Sort by highest rated</string>
+    <string name="sort_by_popular">Sort by popularity</string>
+    <string name="sort_by_release_date">Sort by release date</string>
+    <string name="sort_by_rating">Sort by rating</string>
+    <string name="sort_by_name">Sort by name</string>
     <string name="list_favourite">List favourite</string>
     <string name="vote_average">Rating : %s/10</string>
     <string name="released_date">Released On : %s</string>

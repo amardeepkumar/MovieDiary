@@ -85,20 +85,24 @@ public class MovieActivity extends BaseActivity implements MovieGalleryCursorAda
                 && getSupportFragmentManager().findFragmentById(R.id.fragment_container) instanceof MovieDetailFragment) {
             //Hiding menu for detail fragment in case of phone
             menu.findItem(R.id.sort_by_popular).setVisible(false);
-            menu.findItem(R.id.sort_by_highest_rated).setVisible(false);
-//            menu.findItem(R.id.list_favourite).setVisible(false);
+            menu.findItem(R.id.sort_by_release_date).setVisible(false);
+            menu.findItem(R.id.sort_by_rating).setVisible(false);
+            menu.findItem(R.id.sort_by_name).setVisible(false);
         } else {
             switch (PreferenceManager.getInstance().getInt(Constants.BundleKeys.SORT_PREFERENCE,
                     Constants.SortPreference.SORT_BY_POPULARITY)) {
                 case Constants.SortPreference.SORT_BY_POPULARITY:
                     menu.findItem(R.id.sort_by_popular).setChecked(true);
                     break;
-                case Constants.SortPreference.SORT_BY_VOTE_AVG:
-                    menu.findItem(R.id.sort_by_highest_rated).setChecked(true);
+                case Constants.SortPreference.SORT_BY_RELEASE_DATE:
+                    menu.findItem(R.id.sort_by_release_date).setChecked(true);
                     break;
-                /*case Constants.SortPreference.SORT_BY_FAVOURITE:
-                    menu.findItem(R.id.list_favourite).setChecked(true);
-                    break;*/
+                case Constants.SortPreference.SORT_BY_RATING:
+                    menu.findItem(R.id.sort_by_rating).setChecked(true);
+                    break;
+                case Constants.SortPreference.SORT_BY_NAME:
+                    menu.findItem(R.id.sort_by_name).setChecked(true);
+                    break;
             }
         }
 

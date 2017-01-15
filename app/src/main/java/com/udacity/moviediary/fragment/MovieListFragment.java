@@ -210,16 +210,35 @@ public class MovieListFragment extends BaseFragment  implements LoaderManager.Lo
                 }
                 return true;
 
-            case R.id.sort_by_highest_rated:
+            case R.id.sort_by_release_date:
                 if (!item.isChecked()) {
                     binding.movieList.addOnScrollListener(mOnScrollListener);
                     PreferenceManager.getInstance().setInt(Constants.BundleKeys.SORT_PREFERENCE,
-                            Constants.SortPreference.SORT_BY_VOTE_AVG);
+                            Constants.SortPreference.SORT_BY_RELEASE_DATE);
                     getLoaderManager().restartLoader(MOVIE_GALLERY_LOADER, null, this);
                     sortList(item);
                 }
                 return true;
 
+            case R.id.sort_by_rating:
+                if (!item.isChecked()) {
+                    binding.movieList.addOnScrollListener(mOnScrollListener);
+                    PreferenceManager.getInstance().setInt(Constants.BundleKeys.SORT_PREFERENCE,
+                            Constants.SortPreference.SORT_BY_RATING);
+                    getLoaderManager().restartLoader(MOVIE_GALLERY_LOADER, null, this);
+                    sortList(item);
+                }
+                return true;
+
+            case R.id.sort_by_name:
+                if (!item.isChecked()) {
+                    binding.movieList.addOnScrollListener(mOnScrollListener);
+                    PreferenceManager.getInstance().setInt(Constants.BundleKeys.SORT_PREFERENCE,
+                            Constants.SortPreference.SORT_BY_NAME);
+                    getLoaderManager().restartLoader(MOVIE_GALLERY_LOADER, null, this);
+                    sortList(item);
+                }
+                return true;
             case R.id.app_bar_search:
                 // User chose the "Settings" item, show the app settings UI...
                 return true;
@@ -246,14 +265,23 @@ public class MovieListFragment extends BaseFragment  implements LoaderManager.Lo
                 binding.progressBar.setVisibility(View.VISIBLE);
             }
 
-            String sortBy;
-            if (PreferenceManager.getInstance().getInt(Constants.BundleKeys.SORT_PREFERENCE,
-                    Constants.SortPreference.SORT_BY_POPULARITY) == Constants.SortPreference.SORT_BY_POPULARITY) {
-                sortBy = Config.UrlConstants.SORT_POPULARITY_DESC;
-            } else {
-                sortBy = Config.UrlConstants.SORT_VOTE_AVERAGE_DESC;
-            }
+            String sortBy = "";
 
+            switch (PreferenceManager.getInstance().getInt(Constants.BundleKeys.SORT_PREFERENCE,
+                    Constants.SortPreference.SORT_BY_POPULARITY)) {
+                case Constants.SortPreference.SORT_BY_POPULARITY:
+                    sortBy = Config.UrlConstants.SORT_POPULARITY_DESC;
+                    break;
+                case Constants.SortPreference.SORT_BY_RELEASE_DATE:
+                    sortBy = Config.UrlConstants.SORT_RELEASE_DATE_DESC;
+                    break;
+                case Constants.SortPreference.SORT_BY_RATING:
+                    sortBy = Config.UrlConstants.SORT_VOTE_AVERAGE_DESC;
+                    break;
+                case Constants.SortPreference.SORT_BY_NAME:
+                    sortBy = Config.UrlConstants.SORT_NAME_ASC;
+                    break;
+            }
             NetworkManager.requestMovies(sortBy, mCurrentPage + 1, callBack);
         } else {
             DialogUtils.showToast(R.string.no_network, mContext);

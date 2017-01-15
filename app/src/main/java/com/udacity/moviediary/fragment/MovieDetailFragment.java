@@ -30,6 +30,7 @@ import com.udacity.moviediary.model.response.MovieVideoResponse;
 import com.udacity.moviediary.model.response.ReviewResult;
 import com.udacity.moviediary.model.response.VideoResult;
 import com.udacity.moviediary.network.NetworkManager;
+import com.udacity.moviediary.utility.CollectionUtils;
 import com.udacity.moviediary.utility.Constants;
 import com.udacity.moviediary.utility.DatabaseUtils;
 import com.udacity.moviediary.utility.DialogUtils;
@@ -313,28 +314,31 @@ public class MovieDetailFragment extends BaseFragment implements View.OnClickLis
     public void onLoaderReset(Loader<Cursor> loader) { }
 
     private void saveTrailersInDb(Response<MovieVideoResponse> response) {
-        final List<VideoResult> results = response.body().getResults();
-        if (results.size() > 0) {
-            CustomAsyncQueryHandler queryHandler = new CustomAsyncQueryHandler(mContext.getContentResolver());
-            queryHandler.setAsyncBulkInsertListener(new CustomAsyncQueryHandler.AsyncBulkInsertListener() {
-                @Override
-                public void onBulkInsertComplete(int token, Object cookie, int result) {
-                    refreshUi();
-                }
-            });
+        if (response != null && response.isSuccessful()
+                && response.body() != null) {
+            final List<VideoResult> results = response.body().getResults();
+            if (!CollectionUtils.isEmpty(results)) {
+                CustomAsyncQueryHandler queryHandler = new CustomAsyncQueryHandler(mContext.getContentResolver());
+                queryHandler.setAsyncBulkInsertListener(new CustomAsyncQueryHandler.AsyncBulkInsertListener() {
+                    @Override
+                    public void onBulkInsertComplete(int token, Object cookie, int result) {
+                        refreshUi();
+                    }
+                });
 
-            ContentValues[] contentValues = new ContentValues[results.size()];
-            int i = 0;
-            for (VideoResult videoResult :
-                    results) {
-                ContentValues contentValue = new ContentValues();
-                contentValue.put(MovieContract.VideoEntry.COLUMN_VIDEO_ID, videoResult.getId());
-                contentValue.put(MovieContract.VideoEntry.COLUMN_VIDEO_KEY, videoResult.getKey());
-                contentValue.put(MovieContract.VideoEntry.COLUMN_VIDEO_NAME, videoResult.getName());
-                contentValue.put(MovieContract.VideoEntry.COLUMN_MOVIE_ID, response.body().getId());
-                contentValues[i++] = contentValue;
+                ContentValues[] contentValues = new ContentValues[results.size()];
+                int i = 0;
+                for (VideoResult videoResult :
+                        results) {
+                    ContentValues contentValue = new ContentValues();
+                    contentValue.put(MovieContract.VideoEntry.COLUMN_VIDEO_ID, videoResult.getId());
+                    contentValue.put(MovieContract.VideoEntry.COLUMN_VIDEO_KEY, videoResult.getKey());
+                    contentValue.put(MovieContract.VideoEntry.COLUMN_VIDEO_NAME, videoResult.getName());
+                    contentValue.put(MovieContract.VideoEntry.COLUMN_MOVIE_ID, response.body().getId());
+                    contentValues[i++] = contentValue;
+                }
+                queryHandler.startBulkInsert(1, null, MovieContract.VideoEntry.CONTENT_URI, contentValues);
             }
-            queryHandler.startBulkInsert(1, null, MovieContract.VideoEntry.CONTENT_URI, contentValues);
         }
     }
 
@@ -348,29 +352,32 @@ public class MovieDetailFragment extends BaseFragment implements View.OnClickLis
     }
 
     private void saveReviewsInDb(Response<MovieReviewResponse> response) {
-        final List<ReviewResult> results = response.body().getResults();
-        if (results.size() > 0) {
-            CustomAsyncQueryHandler queryHandler = new CustomAsyncQueryHandler(mContext.getContentResolver());
-            queryHandler.setAsyncBulkInsertListener(new CustomAsyncQueryHandler.AsyncBulkInsertListener() {
-                @Override
-                public void onBulkInsertComplete(int token, Object cookie, int result) {
-                    refreshUi();
-                }
-            });
+        if (response != null && response.isSuccessful()
+                && response.body() != null) {
+            final List<ReviewResult> results = response.body().getResults();
+            if (!CollectionUtils.isEmpty(results)) {
+                CustomAsyncQueryHandler queryHandler = new CustomAsyncQueryHandler(mContext.getContentResolver());
+                queryHandler.setAsyncBulkInsertListener(new CustomAsyncQueryHandler.AsyncBulkInsertListener() {
+                    @Override
+                    public void onBulkInsertComplete(int token, Object cookie, int result) {
+                        refreshUi();
+                    }
+                });
 
-            ContentValues[] contentValues = new ContentValues[results.size()];
-            int i = 0;
-            for (ReviewResult reviewResult :
-                    results) {
-                ContentValues contentValue = new ContentValues();
-                contentValue.put(MovieContract.ReviewEntry.COLUMN_REVIEW_ID, reviewResult.getId());
-                contentValue.put(MovieContract.ReviewEntry.COLUMN_AUTHOR, reviewResult.getAuthor());
-                contentValue.put(MovieContract.ReviewEntry.COLUMN_CONTENT, reviewResult.getContent());
-                contentValue.put(MovieContract.ReviewEntry.COLUMN_URL, reviewResult.getUrl());
-                contentValue.put(MovieContract.ReviewEntry.COLUMN_MOVIE_ID, response.body().getId());
-                contentValues[i++] = contentValue;
+                ContentValues[] contentValues = new ContentValues[results.size()];
+                int i = 0;
+                for (ReviewResult reviewResult :
+                        results) {
+                    ContentValues contentValue = new ContentValues();
+                    contentValue.put(MovieContract.ReviewEntry.COLUMN_REVIEW_ID, reviewResult.getId());
+                    contentValue.put(MovieContract.ReviewEntry.COLUMN_AUTHOR, reviewResult.getAuthor());
+                    contentValue.put(MovieContract.ReviewEntry.COLUMN_CONTENT, reviewResult.getContent());
+                    contentValue.put(MovieContract.ReviewEntry.COLUMN_URL, reviewResult.getUrl());
+                    contentValue.put(MovieContract.ReviewEntry.COLUMN_MOVIE_ID, response.body().getId());
+                    contentValues[i++] = contentValue;
+                }
+                queryHandler.startBulkInsert(1, null, MovieContract.ReviewEntry.CONTENT_URI, contentValues);
             }
-            queryHandler.startBulkInsert(1, null, MovieContract.ReviewEntry.CONTENT_URI, contentValues);
         }
     }
 }

@@ -13,7 +13,9 @@ public class Config {
         String API_KEY = "api_key";
         String PAGE = "page";
         String SORT_POPULARITY_DESC = "popularity.desc";
+        String SORT_RELEASE_DATE_DESC = "release_date.desc";
         String SORT_VOTE_AVERAGE_DESC = "vote_average.desc";
+        String SORT_NAME_ASC = "original_title.asc";
         String ID = "id";
     }
 }
