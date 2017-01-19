@@ -17,4 +17,10 @@
     <string name="search_title">Search</string>
     <string name="movies">Movies</string>
     <string name="favourites">Favourites</string>
+    <string name="edit_watch_history_button">Edit watch history</string>
+    <string name="delete_watch_history_button">Delete watch history</string>
+    <string name="multiplex_name">Multiplex Name</string>
+    <string name="watched_date">Watched Date</string>
+    <string name="place">Place</string>
+    <string name="friends_name">Friends name</string>
 </resources>

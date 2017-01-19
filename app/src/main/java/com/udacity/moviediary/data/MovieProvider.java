@@ -20,6 +20,7 @@ public class MovieProvider extends ContentProvider {
     static final int MOVIE_WITH_VIDEO_AND_REVIEW = 101;
     static final int REVIEW = 200;
     static final int VIDEO = 300;
+    static final int WATCH_HISTORY = 400;
 
     private static final SQLiteQueryBuilder sWeatherByLocationSettingQueryBuilder;
 
@@ -52,6 +53,7 @@ public class MovieProvider extends ContentProvider {
 
         matcher.addURI(authority, MovieContract.PATH_VIDEO, VIDEO);
         matcher.addURI(authority, MovieContract.PATH_REVIEW, REVIEW);
+        matcher.addURI(authority, MovieContract.PATH_HISTORY, WATCH_HISTORY);
         return matcher;
     }
 
@@ -77,6 +79,8 @@ public class MovieProvider extends ContentProvider {
                 return MovieContract.VideoEntry.CONTENT_TYPE;
             case REVIEW:
                 return MovieContract.ReviewEntry.CONTENT_TYPE;
+            case WATCH_HISTORY:
+                return MovieContract.WatchHistory.CONTENT_TYPE;
             default:
                 throw new UnsupportedOperationException("Unknown uri: " + uri);
         }
@@ -139,6 +143,19 @@ public class MovieProvider extends ContentProvider {
                 );
                 break;
             }
+            // "watch history"
+            case WATCH_HISTORY: {
+                retCursor = mOpenHelper.getReadableDatabase().query(
+                        MovieContract.WatchHistory.TABLE_NAME,
+                        projection,
+                        selection,
+                        selectionArgs,
+                        null,
+                        null,
+                        sortOrder
+                );
+                break;
+            }
 
             default:
                 throw new UnsupportedOperationException("Unknown uri: " + uri);
@@ -178,6 +195,14 @@ public class MovieProvider extends ContentProvider {
                     throw new android.database.SQLException("Failed to insert row into " + uri);
                 break;
             }
+            case WATCH_HISTORY: {
+               long _id = db.insert(MovieContract.WatchHistory.TABLE_NAME, null, values);
+                if ( _id > 0 )
+                    returnUri = MovieContract.WatchHistory.buildReviewUri(_id);
+                else
+                    throw new android.database.SQLException("Failed to insert row into " + uri);
+                break;
+            }
             default:
                 throw new UnsupportedOperationException("Unknown uri: " + uri);
         }
@@ -207,6 +232,10 @@ public class MovieProvider extends ContentProvider {
                 rowsDeleted = db.delete(
                         MovieContract.ReviewEntry.TABLE_NAME, selection, selectionArgs);
                 break;
+            case WATCH_HISTORY:
+                rowsDeleted = db.delete(
+                        MovieContract.WatchHistory.TABLE_NAME, selection, selectionArgs);
+                break;
             default:
                 throw new UnsupportedOperationException("Unknown uri: " + uri);
         }
@@ -234,6 +263,10 @@ public class MovieProvider extends ContentProvider {
                 break;
             case REVIEW:
                 rowsUpdated = db.update(MovieContract.ReviewEntry.TABLE_NAME, values, selection,
+                        selectionArgs);
+                break;
+            case WATCH_HISTORY:
+                rowsUpdated = db.update(MovieContract.WatchHistory.TABLE_NAME, values, selection,
                         selectionArgs);
                 break;
             default:
@@ -286,6 +319,21 @@ public class MovieProvider extends ContentProvider {
                 try {
                     for (ContentValues value : values) {
                         long _id = db.insert(MovieContract.ReviewEntry.TABLE_NAME, null, value);
+                        if (_id != -1) {
+                            returnCount++;
+                        }
+                    }
+                    db.setTransactionSuccessful();
+                } finally {
+                    db.endTransaction();
+                }
+                getContext().getContentResolver().notifyChange(uri, null);
+                return returnCount;
+            case WATCH_HISTORY:
+                db.beginTransaction();
+                try {
+                    for (ContentValues value : values) {
+                        long _id = db.insert(MovieContract.WatchHistory.TABLE_NAME, null, value);
                         if (_id != -1) {
                             returnCount++;
                         }

@@ -58,7 +58,19 @@ public class MovieDbHelper extends SQLiteOpenHelper {
                 MovieContract.MovieEntry.TABLE_NAME + " (" + MovieContract.MovieEntry.COLUMN_MOVIE_ID + ") " +
                 " );";
 
+        final String SQL_CREATE_WATCH_HISTORY_TABLE = "CREATE TABLE IF NOT EXISTS " + MovieContract.WatchHistory.TABLE_NAME + " (" +
+                MovieContract.WatchHistory._ID + " INTEGER, " +
+                MovieContract.WatchHistory.COLUMN_MULTIPLEX_NAME + " TEXT, " +
+                MovieContract.WatchHistory.COLUMN_DATE + " TEXT, " +
+                MovieContract.WatchHistory.COLUMN_PLACE + " TEXT, " +
+                MovieContract.WatchHistory.COLUMN_FRIENDS + " TEXT, " +
+                MovieContract.WatchHistory.COLUMN_MOVIE_ID + " TEXT PRIMARY KEY, " +
+                // Set up the history column as a foreign key to movie table.
+                " FOREIGN KEY (" + MovieContract.WatchHistory.COLUMN_MOVIE_ID + ") REFERENCES " +
+                MovieContract.MovieEntry.TABLE_NAME + " (" + MovieContract.WatchHistory.COLUMN_MOVIE_ID + ") " +
+                " );";
 
+        sqLiteDatabase.execSQL(SQL_CREATE_WATCH_HISTORY_TABLE);
         sqLiteDatabase.execSQL(SQL_CREATE_REVIEW_TABLE);
         sqLiteDatabase.execSQL(SQL_CREATE_VIDEO_TABLE);
         sqLiteDatabase.execSQL(SQL_CREATE_MOVIE_TABLE);
@@ -66,6 +78,7 @@ public class MovieDbHelper extends SQLiteOpenHelper {
 
     @Override
     public void onUpgrade(SQLiteDatabase sqLiteDatabase, int oldVersion, int newVersion) {
+        sqLiteDatabase.execSQL("DROP TABLE IF EXISTS " + MovieContract.WatchHistory.TABLE_NAME);
         sqLiteDatabase.execSQL("DROP TABLE IF EXISTS " + MovieContract.VideoEntry.TABLE_NAME);
         sqLiteDatabase.execSQL("DROP TABLE IF EXISTS " + MovieContract.ReviewEntry.TABLE_NAME);
         sqLiteDatabase.execSQL("DROP TABLE IF EXISTS " + MovieContract.MovieEntry.TABLE_NAME);

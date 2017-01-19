@@ -25,6 +25,7 @@ public class MovieContract {
     public static final String PATH_MOVIE = "movie";
     public static final String PATH_VIDEO = "video";
     public static final String PATH_REVIEW = "review";
+    public static final String PATH_HISTORY = "history";
 
     /* Inner class that defines the table contents of the movie table */
     public static final class MovieEntry implements BaseColumns {
@@ -102,6 +103,32 @@ public class MovieContract {
         public static final String COLUMN_AUTHOR = "author";
         public static final String COLUMN_CONTENT = "content";
         public static final String COLUMN_URL = "url";
+        public static final String COLUMN_MOVIE_ID = "movie_id";
+
+
+        public static Uri buildReviewUri(long id) {
+            return ContentUris.withAppendedId(CONTENT_URI, id);
+        }
+    }
+
+
+    /* Inner class that defines the table contents of the review table */
+    public static final class WatchHistory implements BaseColumns {
+
+        public static final Uri CONTENT_URI =
+                BASE_CONTENT_URI.buildUpon().appendPath(PATH_HISTORY).build();
+
+        public static final String CONTENT_TYPE =
+                ContentResolver.CURSOR_DIR_BASE_TYPE + "/" + CONTENT_AUTHORITY + "/" + PATH_HISTORY;
+        public static final String CONTENT_ITEM_TYPE =
+                ContentResolver.CURSOR_ITEM_BASE_TYPE + "/" + CONTENT_AUTHORITY + "/" + PATH_HISTORY;
+
+        public static final String TABLE_NAME = "watch_history";
+
+        public static final String COLUMN_MULTIPLEX_NAME = "multiplex_name";
+        public static final String COLUMN_DATE = "date";
+        public static final String COLUMN_PLACE = "place";
+        public static final String COLUMN_FRIENDS = "friends";
         public static final String COLUMN_MOVIE_ID = "movie_id";
 
 
