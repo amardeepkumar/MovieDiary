@@ -58,7 +58,7 @@
                     android:layout_alignParentEnd="true"
                     android:layout_alignParentRight="true"
                     android:onClick="@{clickHandler.onClick}"
-                    android:padding="@dimen/dp_10"
+                    android:padding="@dimen/dp_25"
                     android:src="@{data.favourite ? @drawable/your_wish_list_1 : @drawable/your_wish_list}" />
 
 
@@ -129,6 +129,17 @@
                     android:layout_height="wrap_content"
                     android:layout_below="@id/reviews"
                     android:orientation="vertical" />
+
+                <ImageView
+                    android:id="@+id/watch_history"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:onClick="@{clickHandler.onClick}"
+                    android:padding="@dimen/dp_10"
+                    app:srcCompat="@android:drawable/ic_menu_recent_history"
+                    android:layout_below="@+id/favourite"
+                    android:layout_alignParentRight="true"
+                    android:layout_alignParentEnd="true" />
             </RelativeLayout>
         </ScrollView>
 

@@ -86,6 +86,7 @@ public class MovieDetailFragment extends BaseFragment implements View.OnClickLis
     public static final int COLUMN_REVIEW_AUTHOR = 14;
 
     private static final int MOVIE_DETAIL_LOADER = 1;
+    private static final String HISTORY_FRAGMENT_TAG = "history_fragment_tag";
 
     private String mMovieId;
     private FragmentMovieDetailBinding binding;
@@ -206,7 +207,7 @@ public class MovieDetailFragment extends BaseFragment implements View.OnClickLis
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.favourite:
-                if (mCursor != null && mMovieId != null  && mCursor.moveToFirst()) {
+                if (mCursor != null && mMovieId != null && mCursor.moveToFirst()) {
                     DatabaseUtils.setFavourite(v.getContext(), mMovieId,
                             mCursor.getInt(MovieListFragment.COLUMN_FAVOURITE) == 0 ? 1 : 0);
                 }
@@ -218,6 +219,9 @@ public class MovieDetailFragment extends BaseFragment implements View.OnClickLis
                 if (intent.resolveActivity(mContext.getPackageManager()) != null) {
                     mContext.startActivity(intent);
                 }
+                break;
+            case R.id.watch_history:
+                WatchHistoryFragment.getInstance(mMovieId).show(getFragmentManager(), HISTORY_FRAGMENT_TAG);
                 break;
         }
     }

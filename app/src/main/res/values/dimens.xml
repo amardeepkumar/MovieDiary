@@ -7,4 +7,7 @@
     <dimen name="sp_16">16sp</dimen>
     <dimen name="dp_20">20dp</dimen>
     <dimen name="widget_margin">8dp</dimen>
+    <dimen name="dp_25">25dp</dimen>
+    <dimen name="dp_30">30dp</dimen>
+    <dimen name="dp_15">15dp</dimen>
 </resources>
