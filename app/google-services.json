@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "938570932173",
+    "firebase_url": "https://moviediary-e4685.firebaseio.com",
+    "project_id": "moviediary-e4685",
+    "storage_bucket": "moviediary-e4685.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:938570932173:android:b6bb34448dfae20d",
+        "android_client_info": {
+          "package_name": "com.udacity.moviediary"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "938570932173-vq2ivv7e57lsqvlc2ouf7ht8uhq612ti.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.udacity.moviediary",
+            "certificate_hash": "052A35E8A55FCB81B311894829C86D5C5411CE36"
+          }
+        },
+        {
+          "client_id": "938570932173-9a5ur4mmigg2fe8ahiv89eeko8t7j364.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD2s7CqNo_R1193FL5X9AcHUzDDcd0CUT8"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "938570932173-9a5ur4mmigg2fe8ahiv89eeko8t7j364.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

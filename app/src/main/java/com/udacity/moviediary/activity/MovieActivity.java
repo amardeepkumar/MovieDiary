@@ -9,6 +9,8 @@ import android.support.v7.widget.SearchView;
 import android.view.Menu;
 import android.view.MenuInflater;
 
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdView;
 import com.udacity.moviediary.R;
 import com.udacity.moviediary.adapter.MovieGalleryCursorAdapter;
 import com.udacity.moviediary.databinding.ActivityMovieBinding;
@@ -23,6 +25,7 @@ import com.udacity.moviediary.utility.PreferenceManager;
  */
 public class MovieActivity extends BaseActivity implements MovieGalleryCursorAdapter.OnItemClickListener, SearchView.OnQueryTextListener {
     private MovieDetailFragment mMovieDetailFragment;
+    private AdView mAdView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,7 +33,9 @@ public class MovieActivity extends BaseActivity implements MovieGalleryCursorAda
         ActivityMovieBinding binding = DataBindingUtil.setContentView(this, R.layout.activity_movie);
 //        binding.toolbar.setTitle(R.string.app_name);
         setSupportActionBar(binding.toolbar);
-
+        mAdView = (AdView) findViewById(R.id.adView);
+        AdRequest adRequest = new AdRequest.Builder().build();
+        mAdView.loadAd(adRequest);
         if (getResources().getBoolean(R.bool.isTablet)) {
             mMovieDetailFragment = (MovieDetailFragment) getSupportFragmentManager().findFragmentById(R.id.movie_detail_fragment);
         } else {
