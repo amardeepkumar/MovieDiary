@@ -23,5 +23,6 @@
     <string name="watched_date">Watched Date</string>
     <string name="place">Place</string>
     <string name="friends_name">Friends name</string>
+    <string name="no_application_found">No application found to show trailer</string>
     <string name="dialog_delete_confirmation">Are you sure to delete details of watch later?</string><string name="banner_ad_unit_id" translatable="false">ca-app-pub-3940256099942544/6300978111</string>
 </resources>

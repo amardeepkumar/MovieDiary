@@ -3,9 +3,11 @@ package com.udacity.moviediary.fragment;
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AlertDialog;
 
+import com.google.firebase.analytics.FirebaseAnalytics;
 import com.udacity.moviediary.R;
 import com.udacity.moviediary.data.CustomAsyncQueryHandler;
 import com.udacity.moviediary.data.MovieContract;
@@ -18,6 +20,8 @@ import com.udacity.moviediary.utility.Constants;
 public class WatchHistoryDeleteConfirmationFragment extends DialogFragment {
 
     private OnDeleteListener mOnDeleteListener;
+    private FirebaseAnalytics mFirebaseAnalytics;
+
     public interface OnDeleteListener {
         void OnDelete();
     }
@@ -29,6 +33,12 @@ public class WatchHistoryDeleteConfirmationFragment extends DialogFragment {
         bundle.putString(Constants.BundleKeys.ID, movieId);
         deleteConfirmationFragment.setArguments(bundle);
         return deleteConfirmationFragment;
+    }
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        mFirebaseAnalytics = FirebaseAnalytics.getInstance(getActivity());
     }
 
     @Override
@@ -64,6 +74,12 @@ public class WatchHistoryDeleteConfirmationFragment extends DialogFragment {
         queryHandler.setAsyncDeleteListener(new CustomAsyncQueryHandler.AsyncDeleteListener() {
             @Override
             public void onDeleteComplete(int token, Object cookie, int result) {
+
+                ///***********Analytics code start*****************
+                Bundle params = new Bundle();
+                params.putString(Constants.AnalyticsKeys.MOVIE_ID, mMovieId);
+                mFirebaseAnalytics.logEvent(Constants.AnalyticsKeys.WATCH_HISTORY_DELETED, params);
+                //************Analytics code end*******************
                 dismiss();
                 mOnDeleteListener.OnDelete();
             }

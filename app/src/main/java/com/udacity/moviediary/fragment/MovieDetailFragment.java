@@ -7,6 +7,7 @@ import android.databinding.DataBindingUtil;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
@@ -18,6 +19,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.google.firebase.analytics.FirebaseAnalytics;
 import com.udacity.moviediary.R;
 import com.udacity.moviediary.data.CustomAsyncQueryHandler;
 import com.udacity.moviediary.data.MovieContract;
@@ -93,6 +95,7 @@ public class MovieDetailFragment extends BaseFragment implements View.OnClickLis
     private Cursor mCursor;
     private LayoutInflater mInflater;
     private AtomicInteger mResponseCount;//Counter to reload cursor after all API response
+    private FirebaseAnalytics mFirebaseAnalytics;
 
     public static MovieDetailFragment getInstance(String movieId) {
         MovieDetailFragment fragment = new MovieDetailFragment();
@@ -126,6 +129,7 @@ public class MovieDetailFragment extends BaseFragment implements View.OnClickLis
             }
         }
         mResponseCount = new AtomicInteger(0);
+        mFirebaseAnalytics = FirebaseAnalytics.getInstance(getActivity());
     }
 
     @Nullable
@@ -156,6 +160,13 @@ public class MovieDetailFragment extends BaseFragment implements View.OnClickLis
             if (binding != null) {
                 binding.progressBar.setVisibility(View.VISIBLE);
             }
+
+            ///***********Analytics code start*****************
+            Bundle params = new Bundle();
+            params.putString(Constants.AnalyticsKeys.MOVIE_ID, mMovieId + "");
+            mFirebaseAnalytics.logEvent(Constants.AnalyticsKeys.LOAD_MOVIE_DETAILS, params);
+            //************Analytics code end*******************
+
             NetworkManager.requestMovieTrailers(mMovieId, new Callback<MovieVideoResponse>() {
                 @Override
                 public void onResponse(Call<MovieVideoResponse> call, Response<MovieVideoResponse> response) {
@@ -205,22 +216,43 @@ public class MovieDetailFragment extends BaseFragment implements View.OnClickLis
 
     @Override
     public void onClick(View v) {
+        Bundle params;
         switch (v.getId()) {
             case R.id.favourite:
                 if (mCursor != null && mMovieId != null && mCursor.moveToFirst()) {
+                    final boolean favourite = mCursor.getInt(MovieListFragment.COLUMN_FAVOURITE) == 0;
                     DatabaseUtils.setFavourite(v.getContext(), mMovieId,
-                            mCursor.getInt(MovieListFragment.COLUMN_FAVOURITE) == 0 ? 1 : 0);
+                            favourite ? 1 : 0);
+
+                    ///***********Analytics code start*****************
+                    params = new Bundle();
+                    params.putString(Constants.AnalyticsKeys.MOVIE_ID, mMovieId);
+                    params.putBoolean(Constants.AnalyticsKeys.IS_FAVOURITE, favourite);
+                    mFirebaseAnalytics.logEvent(Constants.AnalyticsKeys.MOVIE_DETAILS_FAV_CLICKED, params);
+                    //************Analytics code end*******************
                 }
                 break;
             case R.id.trailer:
+                ///***********Analytics code start*****************
+                params = new Bundle();
+                params.putString(Constants.AnalyticsKeys.MOVIE_ID, mMovieId);
+                mFirebaseAnalytics.logEvent(Constants.AnalyticsKeys.TRAILER_CLICKED, params);
+                //************Analytics code end*******************
                 final Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("vnd.youtube://" + v.getTag()));
                 intent.putExtra("force_fullscreen", true);
                 // Verify that the intent will resolve to an activity
                 if (intent.resolveActivity(mContext.getPackageManager()) != null) {
                     mContext.startActivity(intent);
+                } else {
+                    Snackbar.make(v, R.string.no_application_found, Snackbar.LENGTH_SHORT).show();
                 }
                 break;
             case R.id.watch_history:
+                ///***********Analytics code start*****************
+                params = new Bundle();
+                params.putString(Constants.AnalyticsKeys.MOVIE_ID, mMovieId);
+                mFirebaseAnalytics.logEvent(Constants.AnalyticsKeys.WATCH_HISTORY_CLICKED, params);
+                //************Analytics code end*******************
                 WatchHistoryFragment.getInstance(mMovieId).show(getFragmentManager(), HISTORY_FRAGMENT_TAG);
                 break;
         }

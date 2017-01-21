@@ -20,5 +20,17 @@ public class Constants {
         int SORT_BY_NAME = 1004;
     }
 
+    public interface AnalyticsKeys {
+        String LOAD_MORE_MOVIE = "load_more_movie";
+        String LOAD_MOVIE_DETAILS = "load_movie_details";
+        String MOVIE_DETAILS_FAV_CLICKED = "movie_details_fav_clicked";
+        String PAGE_NUMBER = "page_number";
+        String MOVIE_ID = "movie_id";
+        String IS_FAVOURITE = "is_favourite";
+        String WATCH_HISTORY_CLICKED = "watch_history_clicked";
+        String TRAILER_CLICKED = "trailer_clicked";
+        String WATCH_HISTORY_DELETED = "watch_history_deleted";
+    }
+
     public static final String PREV_SELECTION = "prev_selection";
 }

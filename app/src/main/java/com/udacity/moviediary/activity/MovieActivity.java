@@ -11,6 +11,7 @@ import android.view.MenuInflater;
 
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
+import com.google.firebase.analytics.FirebaseAnalytics;
 import com.udacity.moviediary.R;
 import com.udacity.moviediary.adapter.MovieGalleryCursorAdapter;
 import com.udacity.moviediary.databinding.ActivityMovieBinding;
@@ -31,7 +32,6 @@ public class MovieActivity extends BaseActivity implements MovieGalleryCursorAda
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         ActivityMovieBinding binding = DataBindingUtil.setContentView(this, R.layout.activity_movie);
-//        binding.toolbar.setTitle(R.string.app_name);
         setSupportActionBar(binding.toolbar);
         mAdView = (AdView) findViewById(R.id.adView);
         AdRequest adRequest = new AdRequest.Builder().build();

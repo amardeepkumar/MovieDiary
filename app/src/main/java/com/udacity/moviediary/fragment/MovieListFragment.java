@@ -19,6 +19,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.google.firebase.analytics.FirebaseAnalytics;
 import com.udacity.moviediary.R;
 import com.udacity.moviediary.adapter.MovieGalleryCursorAdapter;
 import com.udacity.moviediary.data.CustomAsyncQueryHandler;
@@ -77,6 +78,7 @@ public class MovieListFragment extends BaseFragment  implements LoaderManager.Lo
     private int mCurrentPage;
     private MovieGalleryCursorAdapter.OnItemClickListener mItemClickListener;
     private RecyclerView.OnScrollListener mOnScrollListener;
+    private FirebaseAnalytics mFirebaseAnalytics;
 
     //Callback for reset adapter.
     private final Callback<DiscoverMovieResponse> mCallBack = new Callback<DiscoverMovieResponse>() {
@@ -136,6 +138,7 @@ public class MovieListFragment extends BaseFragment  implements LoaderManager.Lo
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        mFirebaseAnalytics = FirebaseAnalytics.getInstance(getActivity());
         mCurrentPage = savedInstanceState != null
                 ? savedInstanceState.getInt(STATE_PAGE_LOADED, 0)
                 : 0;
@@ -260,6 +263,12 @@ public class MovieListFragment extends BaseFragment  implements LoaderManager.Lo
      */
     private void loadMore(Callback<DiscoverMovieResponse> callBack) {
         if (NetworkUtil.isConnectionAvailable(mContext)) {
+
+            ///***********Analytics code start*****************
+            Bundle params = new Bundle();
+            params.putInt(Constants.AnalyticsKeys.PAGE_NUMBER, mCurrentPage);
+            mFirebaseAnalytics.logEvent(Constants.AnalyticsKeys.LOAD_MORE_MOVIE, params);
+            //************Analytics code end*******************
             loading = true;
             if (binding != null) {
                 binding.progressBar.setVisibility(View.VISIBLE);
