@@ -23,4 +23,5 @@
     <string name="watched_date">Watched Date</string>
     <string name="place">Place</string>
     <string name="friends_name">Friends name</string>
+    <string name="dialog_delete_confirmation">Are you sure to delete details of watch later?</string>
 </resources>

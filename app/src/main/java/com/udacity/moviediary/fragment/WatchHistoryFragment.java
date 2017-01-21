@@ -22,8 +22,7 @@ import com.udacity.moviediary.utility.Constants;
  * Created by Amardeep Kumar on 1/16/2017.
  */
 public class WatchHistoryFragment extends DialogFragment implements View.OnClickListener,
-        LoaderManager.LoaderCallbacks<Cursor> {
-
+        LoaderManager.LoaderCallbacks<Cursor>, WatchHistoryDeleteConfirmationFragment.OnDeleteListener {
     // These indices are tied to MOVIE_PROJECTION.  If MOVIE_PROJECTION changes, these
     // must change.
     public static final int COLUMN_ID = 0;
@@ -136,6 +135,9 @@ public class WatchHistoryFragment extends DialogFragment implements View.OnClick
                 }
                 break;
             case R.id.delete_button:
+                final WatchHistoryDeleteConfirmationFragment confirmationFragment = WatchHistoryDeleteConfirmationFragment.getInstance(mMovieId);
+                confirmationFragment.setListener(this);
+                confirmationFragment.show(getChildFragmentManager(), "");
                 break;
         }
     }
@@ -158,5 +160,10 @@ public class WatchHistoryFragment extends DialogFragment implements View.OnClick
             }
         });
         queryHandler.startUpdate(1, null, MovieContract.WatchHistory.CONTENT_URI, contentValue, selection, selectionArgs);
+    }
+
+    @Override
+    public void OnDelete() {
+        dismiss();
     }
 }
