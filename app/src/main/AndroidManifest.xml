@@ -43,6 +43,20 @@
             android:exported="false"
             android:authorities="com.udacity.moviediary"
             android:name="com.udacity.moviediary.data.MovieProvider"/>
+
+        <receiver android:name=".MovieDiaryAppWidgetProvider" >
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+            </intent-filter>
+            <meta-data android:name="android.appwidget.provider"
+                android:resource="@xml/movie_diary_appwidget_info" />
+        </receiver>
+
+        <activity android:name=".MovieDiaryAppWidgetConfigure">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_CONFIGURE"/>
+            </intent-filter>
+        </activity>
     </application>
 
 </manifest>

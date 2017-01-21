@@ -1,0 +1,10 @@
+<appwidget-provider xmlns:android="http://schemas.android.com/apk/res/android"
+    android:minWidth="100dp"
+    android:minHeight="100dp"
+    android:updatePeriodMillis="86400000"
+    android:previewImage="@drawable/placeholder"
+    android:initialLayout="@layout/appwidget_provider_layout"
+    android:configure="com.udacity.moviediary.MovieDiaryAppWidgetConfigure"
+    android:resizeMode="horizontal|vertical"
+    android:widgetCategory="home_screen">
+</appwidget-provider>
