@@ -36,7 +36,7 @@ public class MovieDiaryAppWidgetConfigure extends Activity {
         Intent intentToLaunch = new Intent(this, MovieActivity.class);
         PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intentToLaunch, 0);
 
-        views.setOnClickPendingIntent(R.id.button, pendingIntent);
+       // views.setOnClickPendingIntent(R.id.button, pendingIntent);
 
         Intent resultValue = new Intent();
         resultValue.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, mAppWidgetId);
