@@ -2,16 +2,17 @@ package com.udacity.moviediary.activity;
 
 import android.app.SearchManager;
 import android.content.Context;
+import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.widget.SearchView;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
-import com.google.firebase.analytics.FirebaseAnalytics;
 import com.udacity.moviediary.R;
 import com.udacity.moviediary.adapter.MovieGalleryCursorAdapter;
 import com.udacity.moviediary.databinding.ActivityMovieBinding;
@@ -25,6 +26,7 @@ import com.udacity.moviediary.utility.PreferenceManager;
  * Created by Amardeep on 18/2/16.
  */
 public class MovieActivity extends BaseActivity implements MovieGalleryCursorAdapter.OnItemClickListener, SearchView.OnQueryTextListener {
+    private static final String TAG = MovieActivity.class.getSimpleName();
     private MovieDetailFragment mMovieDetailFragment;
     private AdView mAdView;
 
@@ -76,7 +78,6 @@ public class MovieActivity extends BaseActivity implements MovieGalleryCursorAda
         if (searchView != null) {
             searchView.setSearchableInfo(searchManager.
                     getSearchableInfo(getComponentName()));
-            searchView.setIconifiedByDefault(false);
             searchView.setSubmitButtonEnabled(true);
             searchView.setOnQueryTextListener(this);
         }
@@ -128,7 +129,12 @@ public class MovieActivity extends BaseActivity implements MovieGalleryCursorAda
 
     @Override
     public boolean onQueryTextSubmit(String query) {
-        return false;
+        Log.d(TAG, "onQueryTextSubmit: query = " + query);
+        Intent intent = new Intent(this, SearchableActivity.class);
+        intent.setAction(Intent.ACTION_SEARCH);
+        intent.putExtra(SearchManager.QUERY, query);
+        startActivity(intent);
+        return true;
     }
 
     @Override

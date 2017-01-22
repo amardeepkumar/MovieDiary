@@ -26,6 +26,7 @@ public class MovieContract {
     public static final String PATH_VIDEO = "video";
     public static final String PATH_REVIEW = "review";
     public static final String PATH_HISTORY = "history";
+    public static final String PATH_SEARCH = "search";
 
     /* Inner class that defines the table contents of the movie table */
     public static final class MovieEntry implements BaseColumns {
@@ -59,6 +60,10 @@ public class MovieContract {
         public static Uri buildMovieTrailerWithReview() {
             return CONTENT_URI.buildUpon().appendPath(PATH_VIDEO)
                     .appendPath(PATH_REVIEW).build();
+        }
+
+        public static Uri buildSearchUri(String query) {
+            return BASE_CONTENT_URI.buildUpon().appendPath(PATH_SEARCH).appendEncodedPath(query).build();
         }
     }
 

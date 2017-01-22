@@ -49,7 +49,7 @@ public class MovieListFragment extends BaseFragment  implements LoaderManager.Lo
 
     private static final String TAG = MovieListFragment.class.getSimpleName();
 
-    private static final String[] MOVIE_PROJECTION = {
+    public static final String[] MOVIE_PROJECTION = {
             MovieContract.MovieEntry._ID,
             MovieContract.MovieEntry.COLUMN_MOVIE_ID,
             MovieContract.MovieEntry.COLUMN_BACK_DROP_PATH,

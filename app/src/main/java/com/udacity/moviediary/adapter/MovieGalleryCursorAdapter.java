@@ -81,7 +81,9 @@ public class MovieGalleryCursorAdapter extends CursorRecyclerViewAdapter<MovieGa
 
         public void OnItemClicked(View view) {
             final int adapterPosition = getAdapterPosition();
-
+            if (mOnItemClickListener == null) {
+                return;
+            }
             if (mCursor != null && mCursor.moveToPosition(adapterPosition)) {
                 final String movieId = mCursor.getString(MovieListFragment.COLUMN_MOVIE_ID);
                 final String rowId = mCursor.getString(MovieListFragment.COLUMN_ID);

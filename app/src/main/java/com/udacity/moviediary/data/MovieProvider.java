@@ -13,14 +13,15 @@ import android.support.annotation.NonNull;
 public class MovieProvider extends ContentProvider {
 
     // The URI Matcher used by this content provider.
-    private static final UriMatcher sUriMatcher = buildUriMatcher();
+    private static final UriMatcher sUriMatcher = buildUriMatcher();;
     private MovieDbHelper mOpenHelper;
 
-    static final int MOVIE = 100;
-    static final int MOVIE_WITH_VIDEO_AND_REVIEW = 101;
-    static final int REVIEW = 200;
-    static final int VIDEO = 300;
-    static final int WATCH_HISTORY = 400;
+    private static final int MOVIE = 100;
+    private static final int MOVIE_WITH_VIDEO_AND_REVIEW = 101;
+    private static final int REVIEW = 200;
+    private static final int VIDEO = 300;
+    private static final int WATCH_HISTORY = 400;
+    private static final int SEARCH_MOVIE = 500;
 
     private static final SQLiteQueryBuilder sWeatherByLocationSettingQueryBuilder;
 
@@ -54,6 +55,7 @@ public class MovieProvider extends ContentProvider {
         matcher.addURI(authority, MovieContract.PATH_VIDEO, VIDEO);
         matcher.addURI(authority, MovieContract.PATH_REVIEW, REVIEW);
         matcher.addURI(authority, MovieContract.PATH_HISTORY, WATCH_HISTORY);
+        matcher.addURI(authority, MovieContract.PATH_SEARCH + "/*", SEARCH_MOVIE);
         return matcher;
     }
 
@@ -81,6 +83,8 @@ public class MovieProvider extends ContentProvider {
                 return MovieContract.ReviewEntry.CONTENT_TYPE;
             case WATCH_HISTORY:
                 return MovieContract.WatchHistory.CONTENT_TYPE;
+            case SEARCH_MOVIE:
+                return MovieContract.MovieEntry.CONTENT_TYPE;
             default:
                 throw new UnsupportedOperationException("Unknown uri: " + uri);
         }
@@ -154,6 +158,24 @@ public class MovieProvider extends ContentProvider {
                         null,
                         sortOrder
                 );
+                break;
+            }
+            // "search movie"
+            case SEARCH_MOVIE: {
+                String query = Uri.decode(uri.getLastPathSegment());
+
+                SQLiteQueryBuilder queryBuilder = new SQLiteQueryBuilder();
+                queryBuilder.setTables(MovieContract.MovieEntry.TABLE_NAME);
+
+                queryBuilder.appendWhere(MovieContract.MovieEntry.COLUMN_ORIGINAL_TITLE + " like '%"
+                        + query + "%'");
+                retCursor = queryBuilder.query(mOpenHelper.getReadableDatabase(),
+                        projection,
+                        selection,
+                        selectionArgs,
+                        null,
+                        null,
+                        sortOrder);
                 break;
             }
 
