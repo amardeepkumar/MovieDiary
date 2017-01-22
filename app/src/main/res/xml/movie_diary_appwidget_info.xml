@@ -1,7 +1,7 @@
 <appwidget-provider xmlns:android="http://schemas.android.com/apk/res/android"
     android:minWidth="400dp"
     android:minHeight="400dp"
-    android:updatePeriodMillis="86400000"
+    android:updatePeriodMillis="0"
     android:previewImage="@drawable/placeholder"
     android:initialLayout="@layout/appwidget_provider_layout"
     android:configure="com.udacity.moviediary.MovieDiaryAppWidgetConfigure"

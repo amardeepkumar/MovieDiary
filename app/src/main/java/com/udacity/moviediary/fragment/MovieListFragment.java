@@ -1,7 +1,5 @@
 package com.udacity.moviediary.fragment;
 
-import android.appwidget.AppWidgetManager;
-import android.content.ComponentName;
 import android.content.ContentProviderOperation;
 import android.content.ContentProviderResult;
 import android.content.ContentValues;
@@ -351,14 +349,16 @@ public class MovieListFragment extends BaseFragment  implements LoaderManager.Lo
             }
             queryHandler.startBulkInsert(1, null, MovieContract.MovieEntry.CONTENT_URI, contentValues);
 
-            Intent intent = new Intent(getActivity(), MovieDiaryAppWidgetProvider.class);
+        /*    Intent intent = new Intent(getActivity(), MovieDiaryAppWidgetProvider.class);
             intent.setAction(AppWidgetManager.ACTION_APPWIDGET_UPDATE);
-// Use an array and EXTRA_APPWIDGET_IDS instead of AppWidgetManager.EXTRA_APPWIDGET_ID,
-// since it seems the onUpdate() is only fired on that:
             int widgetIDs[] = AppWidgetManager.getInstance(getActivity().getApplication()).getAppWidgetIds(new ComponentName(getActivity().getApplication(),
                     MovieDiaryAppWidgetProvider.class));
             intent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS, widgetIDs);
-            getActivity().sendBroadcast(intent);
+            getActivity().sendBroadcast(intent)*/;
+
+            Intent intent_meeting_update=new  Intent(getActivity(), MovieDiaryAppWidgetProvider.class);
+            intent_meeting_update.setAction(MovieDiaryAppWidgetProvider.UPDATE_MEETING_ACTION);
+            getActivity().sendBroadcast(intent_meeting_update);
         }
     }
 
