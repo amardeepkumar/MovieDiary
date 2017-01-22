@@ -16,6 +16,7 @@ import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.SearchView;
 import android.view.Menu;
 import android.view.MenuInflater;
+import android.view.View;
 
 import com.udacity.moviediary.R;
 import com.udacity.moviediary.adapter.MovieGalleryCursorAdapter;
@@ -25,6 +26,7 @@ import com.udacity.moviediary.databinding.ActivitySearchBinding;
 import com.udacity.moviediary.fragment.MovieListFragment;
 import com.udacity.moviediary.model.response.DiscoverMovieResponse;
 import com.udacity.moviediary.network.NetworkManager;
+import com.udacity.moviediary.utility.CollectionUtils;
 import com.udacity.moviediary.utility.Constants;
 import com.udacity.moviediary.utility.DialogUtils;
 import com.udacity.moviediary.utility.NetworkUtil;
@@ -72,6 +74,7 @@ public class SearchableActivity extends BaseActivity implements SearchView.OnQue
                 action.equals(GMS_SEARCH_ACTION)) {
             mQuery = intent.getStringExtra(SearchManager.QUERY);
             if (mTabIndex ==  FAVOURITE) {
+                mActivitySearchBinding.progressBar.setVisibility(View.VISIBLE);
                 getSupportLoaderManager().initLoader(MOVIE_SEARCH_LOADER, null, this);
             } else {
                 doSearch();
@@ -81,8 +84,10 @@ public class SearchableActivity extends BaseActivity implements SearchView.OnQue
 
     private void doSearch() {
         if (NetworkUtil.isConnectionAvailable(this)) {
+            mActivitySearchBinding.progressBar.setVisibility(View.VISIBLE);
             NetworkManager.searchMovies(mQuery, this);
         } else {
+            mActivitySearchBinding.progressBar.setVisibility(View.GONE);
             DialogUtils.showToast(R.string.no_network, this);
         }
     }
@@ -91,6 +96,7 @@ public class SearchableActivity extends BaseActivity implements SearchView.OnQue
     public boolean onQueryTextSubmit(String s) {
         mQuery = s;
         if (mTabIndex ==  FAVOURITE) {
+            mActivitySearchBinding.progressBar.setVisibility(View.VISIBLE);
             getSupportLoaderManager().restartLoader(MOVIE_SEARCH_LOADER, null, this);
         } else {
             doSearch();
@@ -142,9 +148,13 @@ public class SearchableActivity extends BaseActivity implements SearchView.OnQue
 
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
+        mActivitySearchBinding.progressBar.setVisibility(View.GONE);
         if (data.getCount() > 0) {
+            mActivitySearchBinding.noResultFound.setVisibility(View.GONE);
             ((MovieGalleryCursorAdapter) mActivitySearchBinding.movieList.getAdapter())
                     .swapCursor(data);
+        } else {
+            mActivitySearchBinding.noResultFound.setVisibility(View.VISIBLE);
         }
     }
 
@@ -156,14 +166,23 @@ public class SearchableActivity extends BaseActivity implements SearchView.OnQue
 
     @Override
     public void onResponse(Call<DiscoverMovieResponse> call, Response<DiscoverMovieResponse> response) {
+        mActivitySearchBinding.progressBar.setVisibility(View.GONE);
         if (response != null && response.isSuccessful()
                 && response.body() != null) {
+            if (CollectionUtils.isEmpty(response.body().getResults())) {
+                mActivitySearchBinding.noResultFound.setVisibility(View.VISIBLE);
+            } else {
+                mActivitySearchBinding.noResultFound.setVisibility(View.GONE);
+            }
             ((MovieSearchListAdapter) mActivitySearchBinding.movieList.getAdapter()).setList(response.body().getResults());
+        } else {
+            DialogUtils.showToast("response failed", this);
         }
     }
 
     @Override
     public void onFailure(Call<DiscoverMovieResponse> call, Throwable t) {
+        mActivitySearchBinding.progressBar.setVisibility(View.GONE);
         DialogUtils.showToast("response failed", this);
     }
 }

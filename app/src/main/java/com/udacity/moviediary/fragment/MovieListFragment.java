@@ -388,7 +388,10 @@ public class MovieListFragment extends BaseFragment  implements LoaderManager.Lo
     @Override
     public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
         if (data.getCount() > 0) {
+            binding.noDataFound.setVisibility(View.GONE);
             ((MovieGalleryCursorAdapter)binding.movieList.getAdapter()).swapCursor(data);
+        } else {
+            binding.noDataFound.setVisibility(View.VISIBLE);
         }
     }
 
