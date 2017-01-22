@@ -69,4 +69,13 @@ public class NetworkManager {
         Call<MovieReviewResponse> model = service.requestMovieReviews(movieId, BuildConfig.OPEN_WEATHER_MAP_API_KEY);
         model.enqueue(callback);
     }
+
+    public static void searchMovies(String query, Callback<DiscoverMovieResponse> callback) {
+        ApiService service = getApiService();
+        Map<String, String> options = new HashMap<>();
+        options.put(Config.UrlConstants.QUERY, query);
+        options.put(Config.UrlConstants.API_KEY, BuildConfig.OPEN_WEATHER_MAP_API_KEY);
+        Call<DiscoverMovieResponse> model = service.searchMovies(options);
+        model.enqueue(callback);
+    }
 }

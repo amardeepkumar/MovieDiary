@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.support.v7.app.ActionBar;
 import android.support.v7.widget.SearchView;
 import android.util.Log;
@@ -131,6 +132,17 @@ public class MovieActivity extends BaseActivity implements MovieGalleryCursorAda
     public boolean onQueryTextSubmit(String query) {
         Log.d(TAG, "onQueryTextSubmit: query = " + query);
         Intent intent = new Intent(this, SearchableActivity.class);
+        int fragmentId;
+        if (getResources().getBoolean(R.bool.isTablet)) {
+            fragmentId = R.id.movie_gallery_fragment;
+        } else {
+            fragmentId = R.id.fragment_container;
+        }
+        Fragment fragment = getSupportFragmentManager().findFragmentById(fragmentId);
+        if (fragment != null &&
+                fragment instanceof MovieMasterFragment) {
+            intent.putExtra(Constants.BundleKeys.IS_FAVOURITE_MODE, ((MovieMasterFragment) fragment).getCurrentTabPosition());
+        }
         intent.setAction(Intent.ACTION_SEARCH);
         intent.putExtra(SearchManager.QUERY, query);
         startActivity(intent);

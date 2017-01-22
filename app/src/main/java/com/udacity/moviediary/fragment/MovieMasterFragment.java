@@ -15,12 +15,13 @@ import com.udacity.moviediary.databinding.FragmentMovieMasterBinding;
 /**
  * Created by Amardeep on 18/2/16.
  */
-public class MovieMasterFragment extends BaseFragment {
+public class MovieMasterFragment extends BaseFragment implements ViewPager.OnPageChangeListener {
 
     private static final String TAG = MovieMasterFragment.class.getSimpleName();
 
 
     private FragmentMovieMasterBinding binding;
+    private int mCurrentTabPosition;
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
@@ -35,6 +36,7 @@ public class MovieMasterFragment extends BaseFragment {
         setupViewPager(binding.viewpager);
 
         binding.tabs.setupWithViewPager(binding.viewpager);
+        binding.viewpager.addOnPageChangeListener(this);
         return binding.getRoot();
     }
 
@@ -43,5 +45,24 @@ public class MovieMasterFragment extends BaseFragment {
         adapter.addFragment(MovieListFragment.getInstance(false), getString(R.string.movies));
         adapter.addFragment(MovieListFragment.getInstance(true), getString(R.string.favourites));
         viewPager.setAdapter(adapter);
+    }
+
+    @Override
+    public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+    }
+
+    @Override
+    public void onPageSelected(int position) {
+        mCurrentTabPosition = position;
+    }
+
+    @Override
+    public void onPageScrollStateChanged(int state) {
+
+    }
+
+    public int getCurrentTabPosition() {
+        return mCurrentTabPosition;
     }
 }

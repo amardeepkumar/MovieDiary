@@ -19,21 +19,34 @@ import android.view.MenuInflater;
 
 import com.udacity.moviediary.R;
 import com.udacity.moviediary.adapter.MovieGalleryCursorAdapter;
+import com.udacity.moviediary.adapter.MovieSearchListAdapter;
 import com.udacity.moviediary.data.MovieContract;
 import com.udacity.moviediary.databinding.ActivitySearchBinding;
 import com.udacity.moviediary.fragment.MovieListFragment;
+import com.udacity.moviediary.model.response.DiscoverMovieResponse;
+import com.udacity.moviediary.network.NetworkManager;
+import com.udacity.moviediary.utility.Constants;
+import com.udacity.moviediary.utility.DialogUtils;
+import com.udacity.moviediary.utility.NetworkUtil;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 /**
  * Created by Amardeep Kumar on 1/14/2017.
  */
 public class SearchableActivity extends BaseActivity implements SearchView.OnQueryTextListener,
-        LoaderManager.LoaderCallbacks<Cursor> {
+        LoaderManager.LoaderCallbacks<Cursor>, Callback<DiscoverMovieResponse> {
 
     private static final String TAG = SearchableActivity.class.getSimpleName();
     private static final int MOVIE_SEARCH_LOADER = 1;
+    private static final int MOVIES = 0;
+    private static final int FAVOURITE = 1;
     private static String GMS_SEARCH_ACTION = "com.google.android.gms.actions.SEARCH_ACTION";
     private ActivitySearchBinding mActivitySearchBinding;
     private String mQuery;
+    private int mTabIndex;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -41,9 +54,13 @@ public class SearchableActivity extends BaseActivity implements SearchView.OnQue
         mActivitySearchBinding = DataBindingUtil.setContentView(this, R.layout.activity_search);
         final GridLayoutManager gridLayoutManager = new GridLayoutManager(this, 2);
         mActivitySearchBinding.movieList.setLayoutManager(gridLayoutManager);
-        final MovieGalleryCursorAdapter adapter = new MovieGalleryCursorAdapter(SearchableActivity.this, null, null);
-        mActivitySearchBinding.movieList.setAdapter(adapter);
         setSupportActionBar(mActivitySearchBinding.toolbar);
+
+        if (getIntent() != null) {
+            mTabIndex = getIntent().getIntExtra(Constants.BundleKeys.IS_FAVOURITE_MODE, MOVIES);
+        }
+        mActivitySearchBinding.movieList.setAdapter(mTabIndex ==  FAVOURITE ? new MovieGalleryCursorAdapter(SearchableActivity.this, null, null) : new MovieSearchListAdapter(this, null));
+
         onNewIntent(getIntent());
     }
 
@@ -54,14 +71,30 @@ public class SearchableActivity extends BaseActivity implements SearchView.OnQue
         if (action.equals(Intent.ACTION_SEARCH) ||
                 action.equals(GMS_SEARCH_ACTION)) {
             mQuery = intent.getStringExtra(SearchManager.QUERY);
-            getSupportLoaderManager().initLoader(MOVIE_SEARCH_LOADER, null, this);
+            if (mTabIndex ==  FAVOURITE) {
+                getSupportLoaderManager().initLoader(MOVIE_SEARCH_LOADER, null, this);
+            } else {
+                doSearch();
+            }
+        }
+    }
+
+    private void doSearch() {
+        if (NetworkUtil.isConnectionAvailable(this)) {
+            NetworkManager.searchMovies(mQuery, this);
+        } else {
+            DialogUtils.showToast(R.string.no_network, this);
         }
     }
 
     @Override
     public boolean onQueryTextSubmit(String s) {
         mQuery = s;
-        getSupportLoaderManager().restartLoader(MOVIE_SEARCH_LOADER, null, this);
+        if (mTabIndex ==  FAVOURITE) {
+            getSupportLoaderManager().restartLoader(MOVIE_SEARCH_LOADER, null, this);
+        } else {
+            doSearch();
+        }
         return true;
     }
 
@@ -97,10 +130,8 @@ public class SearchableActivity extends BaseActivity implements SearchView.OnQue
         Uri searchUri = MovieContract.MovieEntry.buildSearchUri(mQuery);
         String[] selectionArgs = null;
         String selection = null;
-//        if (getArguments() != null && getArguments().getBoolean(Constants.BundleKeys.IS_FAVOURITE_MODE)) {
-            selection = MovieContract.MovieEntry.COLUMN_FAVOURITE + " = ?";
-            selectionArgs = new String[]{"1"};
-//        }
+        selection = MovieContract.MovieEntry.COLUMN_FAVOURITE + " = ?";
+        selectionArgs = new String[]{"1"};
         return new CursorLoader(this,
                 searchUri,
                 MovieListFragment.MOVIE_PROJECTION,
@@ -121,5 +152,18 @@ public class SearchableActivity extends BaseActivity implements SearchView.OnQue
     public void onLoaderReset(Loader<Cursor> loader) {
         ((MovieGalleryCursorAdapter) mActivitySearchBinding.movieList.getAdapter())
                 .swapCursor(null);
+    }
+
+    @Override
+    public void onResponse(Call<DiscoverMovieResponse> call, Response<DiscoverMovieResponse> response) {
+        if (response != null && response.isSuccessful()
+                && response.body() != null) {
+            ((MovieSearchListAdapter) mActivitySearchBinding.movieList.getAdapter()).setList(response.body().getResults());
+        }
+    }
+
+    @Override
+    public void onFailure(Call<DiscoverMovieResponse> call, Throwable t) {
+        DialogUtils.showToast("response failed", this);
     }
 }

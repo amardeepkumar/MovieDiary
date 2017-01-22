@@ -21,6 +21,9 @@ public interface ApiService {
     @GET("/3/discover/movie")
     Call<DiscoverMovieResponse> requestMovies(@QueryMap Map<String, String> options);
 
+    @GET("/3/search/movie")
+    Call<DiscoverMovieResponse> searchMovies(@QueryMap Map<String, String> queryMap);
+
     @GET("/3/movie/{id}")
     Call<MovieDetailResponse> requestMovieDetail(@Path(Config.UrlConstants.ID) String movieId,
                                                  @Query(Config.UrlConstants.API_KEY) String apiKey);

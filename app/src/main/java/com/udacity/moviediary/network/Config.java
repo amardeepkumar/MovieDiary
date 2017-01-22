@@ -17,5 +17,6 @@ public class Config {
         String SORT_VOTE_AVERAGE_DESC = "vote_average.desc";
         String SORT_NAME_ASC = "original_title.asc";
         String ID = "id";
+        String QUERY = "query";
     }
 }
