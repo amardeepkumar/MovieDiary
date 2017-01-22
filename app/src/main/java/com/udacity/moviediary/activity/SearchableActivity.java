@@ -128,8 +128,8 @@ public class SearchableActivity extends BaseActivity implements SearchView.OnQue
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
         Uri searchUri = MovieContract.MovieEntry.buildSearchUri(mQuery);
-        String[] selectionArgs = null;
-        String selection = null;
+        String[] selectionArgs;
+        String selection;
         selection = MovieContract.MovieEntry.COLUMN_FAVOURITE + " = ?";
         selectionArgs = new String[]{"1"};
         return new CursorLoader(this,

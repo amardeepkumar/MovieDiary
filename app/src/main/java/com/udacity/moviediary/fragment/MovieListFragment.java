@@ -46,7 +46,7 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 /**
- * Created by Amardeep on 18/2/16.
+ * Created by Amardeep on 12/12/2016.
  */
 public class MovieListFragment extends BaseFragment  implements LoaderManager.LoaderCallbacks<Cursor>,
         Callback<DiscoverMovieResponse> {

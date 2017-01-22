@@ -1,7 +1,7 @@
 package com.udacity.moviediary.network;
 
 /**
- * Created by Amardeep on 13/2/16.
+ * Created by Amardeep on 12/12/2016.
  */
 public class Config {
     public interface UrlConstants {

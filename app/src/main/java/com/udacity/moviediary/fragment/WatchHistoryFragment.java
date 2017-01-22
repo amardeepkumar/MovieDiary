@@ -19,7 +19,7 @@ import com.udacity.moviediary.databinding.FragmentWatchHistoryBinding;
 import com.udacity.moviediary.utility.Constants;
 
 /**
- * Created by Amardeep Kumar on 1/16/2017.
+ * Created by Amardeep on 12/12/2016.
  */
 public class WatchHistoryFragment extends DialogFragment implements View.OnClickListener,
         LoaderManager.LoaderCallbacks<Cursor>, WatchHistoryDeleteConfirmationFragment.OnDeleteListener {

@@ -47,7 +47,7 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 /**
- * Created by Amardeep on 18/2/16.
+ * Created by Amardeep on 12/12/2016.
  */
 public class MovieDetailFragment extends BaseFragment implements View.OnClickListener, LoaderManager.LoaderCallbacks<Cursor> {
 
@@ -95,7 +95,7 @@ public class MovieDetailFragment extends BaseFragment implements View.OnClickLis
     private Cursor mCursor;
     private LayoutInflater mInflater;
     private AtomicInteger mResponseCount;//Counter to reload cursor after all API response
-    private FirebaseAnalytics mFirebaseAnalytics;
+    private FirebaseAnalytics mFireBaseAnalytics;
 
     public static MovieDetailFragment getInstance(String movieId) {
         MovieDetailFragment fragment = new MovieDetailFragment();
@@ -129,7 +129,7 @@ public class MovieDetailFragment extends BaseFragment implements View.OnClickLis
             }
         }
         mResponseCount = new AtomicInteger(0);
-        mFirebaseAnalytics = FirebaseAnalytics.getInstance(getActivity());
+        mFireBaseAnalytics = FirebaseAnalytics.getInstance(getActivity());
     }
 
     @Nullable
@@ -164,7 +164,7 @@ public class MovieDetailFragment extends BaseFragment implements View.OnClickLis
             ///***********Analytics code start*****************
             Bundle params = new Bundle();
             params.putString(Constants.AnalyticsKeys.MOVIE_ID, mMovieId + "");
-            mFirebaseAnalytics.logEvent(Constants.AnalyticsKeys.LOAD_MOVIE_DETAILS, params);
+            mFireBaseAnalytics.logEvent(Constants.AnalyticsKeys.LOAD_MOVIE_DETAILS, params);
             //************Analytics code end*******************
 
             NetworkManager.requestMovieTrailers(mMovieId, new Callback<MovieVideoResponse>() {
@@ -228,7 +228,7 @@ public class MovieDetailFragment extends BaseFragment implements View.OnClickLis
                     params = new Bundle();
                     params.putString(Constants.AnalyticsKeys.MOVIE_ID, mMovieId);
                     params.putBoolean(Constants.AnalyticsKeys.IS_FAVOURITE, favourite);
-                    mFirebaseAnalytics.logEvent(Constants.AnalyticsKeys.MOVIE_DETAILS_FAV_CLICKED, params);
+                    mFireBaseAnalytics.logEvent(Constants.AnalyticsKeys.MOVIE_DETAILS_FAV_CLICKED, params);
                     //************Analytics code end*******************
                 }
                 break;
@@ -236,7 +236,7 @@ public class MovieDetailFragment extends BaseFragment implements View.OnClickLis
                 ///***********Analytics code start*****************
                 params = new Bundle();
                 params.putString(Constants.AnalyticsKeys.MOVIE_ID, mMovieId);
-                mFirebaseAnalytics.logEvent(Constants.AnalyticsKeys.TRAILER_CLICKED, params);
+                mFireBaseAnalytics.logEvent(Constants.AnalyticsKeys.TRAILER_CLICKED, params);
                 //************Analytics code end*******************
                 final Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("vnd.youtube://" + v.getTag()));
                 intent.putExtra("force_fullscreen", true);
@@ -251,7 +251,7 @@ public class MovieDetailFragment extends BaseFragment implements View.OnClickLis
                 ///***********Analytics code start*****************
                 params = new Bundle();
                 params.putString(Constants.AnalyticsKeys.MOVIE_ID, mMovieId);
-                mFirebaseAnalytics.logEvent(Constants.AnalyticsKeys.WATCH_HISTORY_CLICKED, params);
+                mFireBaseAnalytics.logEvent(Constants.AnalyticsKeys.WATCH_HISTORY_CLICKED, params);
                 //************Analytics code end*******************
                 WatchHistoryFragment.getInstance(mMovieId).show(getFragmentManager(), HISTORY_FRAGMENT_TAG);
                 break;

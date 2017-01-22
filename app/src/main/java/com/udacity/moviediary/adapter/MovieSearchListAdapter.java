@@ -1,7 +1,6 @@
 package com.udacity.moviediary.adapter;
 
 import android.content.Context;
-import android.database.Cursor;
 import android.databinding.DataBindingUtil;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
@@ -10,7 +9,6 @@ import android.view.ViewGroup;
 
 import com.udacity.moviediary.R;
 import com.udacity.moviediary.databinding.ItemMovieGalleryBinding;
-import com.udacity.moviediary.fragment.MovieListFragment;
 import com.udacity.moviediary.model.response.MovieResult;
 
 import java.util.List;

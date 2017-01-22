@@ -1,9 +1,5 @@
 package com.udacity.moviediary.data;
 
-/**
- * Created by Amardeep on 11/4/16.
- */
-
 import android.content.ContentProviderOperation;
 import android.content.ContentProviderResult;
 import android.content.ContentResolver;
@@ -22,6 +18,10 @@ import java.util.ArrayList;
 
 /**
  * Customized class to add the feature of bulk insert and batch operations in existing {@link android.content.AsyncQueryHandler}
+ */
+
+/**
+ * Created by Amardeep on 12/12/2016.
  */
 public abstract class AsyncQueryHandler extends Handler {
     private static final int EVENT_ARG_QUERY = 1;
@@ -436,7 +436,6 @@ public abstract class AsyncQueryHandler extends Handler {
             case EVENT_ARG_APPLY_BATCH:
                 onApplyBatchComplete(token, args.cookie, (ContentProviderResult[]) args.result);
                 break;
-
         }
     }
 }

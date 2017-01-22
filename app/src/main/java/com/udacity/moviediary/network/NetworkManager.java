@@ -18,7 +18,7 @@ import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 /**
- * Created by Amardeep on 13/2/16.
+ * Created by Amardeep on 12/12/2016.
  */
 public class NetworkManager {
 

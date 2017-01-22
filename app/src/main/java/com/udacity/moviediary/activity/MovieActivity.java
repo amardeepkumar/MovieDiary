@@ -24,21 +24,19 @@ import com.udacity.moviediary.utility.PreferenceManager;
 
 /**
  * Class to show the Movie related UI
- * Created by Amardeep on 18/2/16.
+ * Created by Amardeep on 18/12/16.
  */
 public class MovieActivity extends BaseActivity implements MovieGalleryCursorAdapter.OnItemClickListener, SearchView.OnQueryTextListener {
     private static final String TAG = MovieActivity.class.getSimpleName();
     private MovieDetailFragment mMovieDetailFragment;
-    private AdView mAdView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         ActivityMovieBinding binding = DataBindingUtil.setContentView(this, R.layout.activity_movie);
         setSupportActionBar(binding.toolbar);
-        mAdView = (AdView) findViewById(R.id.adView);
         AdRequest adRequest = new AdRequest.Builder().build();
-        mAdView.loadAd(adRequest);
+        ((AdView) findViewById(R.id.adView)).loadAd(adRequest);
         if (getResources().getBoolean(R.bool.isTablet)) {
             mMovieDetailFragment = (MovieDetailFragment) getSupportFragmentManager().findFragmentById(R.id.movie_detail_fragment);
         } else {
@@ -71,8 +69,6 @@ public class MovieActivity extends BaseActivity implements MovieGalleryCursorAda
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.menu_main, menu);
         SearchView searchView = (SearchView) menu.findItem(R.id.app_bar_search).getActionView();
-
-//        (SearchView) MenuItemCompat.getActionView(searchItem);
 
         SearchManager searchManager = (SearchManager)
                 getSystemService(Context.SEARCH_SERVICE);

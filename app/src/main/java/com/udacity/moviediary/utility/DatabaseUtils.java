@@ -7,7 +7,7 @@ import com.udacity.moviediary.data.CustomAsyncQueryHandler;
 import com.udacity.moviediary.data.MovieContract;
 
 /**
- * Created by Amardeep on 15/4/16.
+ * Created by Amardeep on 12/12/2016.
  */
 public class DatabaseUtils {
 

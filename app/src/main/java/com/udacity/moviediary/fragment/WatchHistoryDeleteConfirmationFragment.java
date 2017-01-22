@@ -20,7 +20,7 @@ import com.udacity.moviediary.utility.Constants;
 public class WatchHistoryDeleteConfirmationFragment extends DialogFragment {
 
     private OnDeleteListener mOnDeleteListener;
-    private FirebaseAnalytics mFirebaseAnalytics;
+    private FirebaseAnalytics mFireBaseAnalytics;
 
     public interface OnDeleteListener {
         void OnDelete();
@@ -38,7 +38,7 @@ public class WatchHistoryDeleteConfirmationFragment extends DialogFragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mFirebaseAnalytics = FirebaseAnalytics.getInstance(getActivity());
+        mFireBaseAnalytics = FirebaseAnalytics.getInstance(getActivity());
     }
 
     @Override
@@ -78,7 +78,7 @@ public class WatchHistoryDeleteConfirmationFragment extends DialogFragment {
                 ///***********Analytics code start*****************
                 Bundle params = new Bundle();
                 params.putString(Constants.AnalyticsKeys.MOVIE_ID, mMovieId);
-                mFirebaseAnalytics.logEvent(Constants.AnalyticsKeys.WATCH_HISTORY_DELETED, params);
+                mFireBaseAnalytics.logEvent(Constants.AnalyticsKeys.WATCH_HISTORY_DELETED, params);
                 //************Analytics code end*******************
                 dismiss();
                 mOnDeleteListener.OnDelete();

@@ -9,7 +9,7 @@ import com.udacity.moviediary.R;
 import com.udacity.moviediary.network.Config;
 
 /**
- * Created by Amardeep on 25/2/16.
+ * Created by Amardeep on 12/12/2016.
  */
 public class MyAppBindingUtils {
     @BindingAdapter({"app:imageUrl"})

@@ -1,7 +1,7 @@
 package com.udacity.moviediary.adapter;
 
 /**
- * Created by Amardeep on 12/4/16.
+ * Created by Amardeep on 12/12/2016.
  */
 
 import android.database.Cursor;
@@ -9,7 +9,7 @@ import android.database.DataSetObserver;
 import android.support.v7.widget.RecyclerView;
 
 /**
- * A base classto provide cursor adapter to Recycler view
+ * A base class to provide cursor adapter to Recycler view
  */
 
 public abstract class CursorRecyclerViewAdapter<VH extends RecyclerView.ViewHolder> extends RecyclerView.Adapter<VH> {

@@ -24,7 +24,7 @@ import com.udacity.moviediary.utility.PreferenceManager;
 import java.util.ArrayList;
 
 /**
- * Created by Amardeep on 23/2/16.
+ * Created by Amardeep on 11/12/16.
  */
 public class MovieGalleryCursorAdapter extends CursorRecyclerViewAdapter<MovieGalleryCursorAdapter.MovieGalleryViewHolder> {
 
