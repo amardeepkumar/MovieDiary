@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+
+        <variable
+            name="data"
+            type="com.udacity.moviediary.model.response.MovieResult" />
+
+        <variable
+            name="clickHandler"
+            type="com.udacity.moviediary.adapter.MovieGalleryCursorAdapter.MovieGalleryViewHolder" />
+    </data>
+
+    <RelativeLayout
+        android:layout_width="@dimen/dp_260"
+        android:layout_height="@dimen/dp_260"
+        android:onClick="@{clickHandler.OnItemClicked}">
+
+        <ImageView
+            android:id="@+id/image_view_item"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:contentDescription="@string/movie_poster_image"
+            android:padding="@dimen/dp_10"
+            android:scaleType="fitXY"
+            android:src="@drawable/example_appwidget_preview"
+            app:imageUrl="@{data.posterPath ?? data.backdropPath}" />
+
+        <TextView
+            android:textColor="@color/colorPrimaryDark"
+            android:layout_below="@id/image_view_item"
+            android:id="@+id/movie_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:contentDescription="@string/movie_name"
+            android:padding="@dimen/dp_10" />
+    </RelativeLayout>
+</layout>

@@ -4,7 +4,7 @@ import android.content.Intent;
 import android.widget.RemoteViewsService;
 
 /**
- * Created by VijayLakshmi IN on 1/22/2017.
+ * Created by Amardeep Kumar on 1/22/2017.
  */
 public class ListViewWidgetService extends RemoteViewsService {
 

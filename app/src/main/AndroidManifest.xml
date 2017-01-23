@@ -45,21 +45,28 @@
             android:authorities="com.udacity.moviediary"
             android:name="com.udacity.moviediary.data.MovieProvider"/>
 
-        <receiver android:name=".MovieDiaryAppWidgetProvider" >
+        <!-- We'll need to add two entries to our manifest for our collection view widget -->
+
+        <!-- 1. The broadcast receiver that refers to our widget. This needs the
+                intent-filter android.appwidget.action.APPWIDGET_UPDATE and the
+                meta-data for our XML widget configuration -->
+        <receiver android:name=".widget.CollectionWidget">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
             </intent-filter>
-            <meta-data android:name="android.appwidget.provider"
-                android:resource="@xml/movie_diary_appwidget_info" />
+
+            <intent-filter>
+                <action android:name="com.udacity.moviediary.WIDGET_BUTTON" />
+            </intent-filter>
+
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/collection_widget_info" />
         </receiver>
 
-        <activity android:name=".MovieDiaryAppWidgetConfigure">
-            <intent-filter>
-                <action android:name="android.appwidget.action.APPWIDGET_CONFIGURE"/>
-            </intent-filter>
-        </activity>
-
-        <service android:name=".ListViewWidgetService"
+        <!-- 2. The service that will send our collection data to our widget. It needs the
+                permission android.permission.BIND_REMOTEVIEWS -->
+        <service android:name=".widget.WidgetService"
             android:permission="android.permission.BIND_REMOTEVIEWS" />
     </application>
 

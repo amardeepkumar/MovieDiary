@@ -2,13 +2,15 @@ package com.udacity.moviediary.model.response;
 
 import android.databinding.BaseObservable;
 import android.databinding.Bindable;
+import android.os.Parcel;
+import android.os.Parcelable;
 
 import com.google.gson.annotations.SerializedName;
 import com.udacity.moviediary.BR;
 
 import java.util.List;
 
-public class MovieResult extends BaseObservable {
+public class MovieResult extends BaseObservable implements Parcelable {
     @Bindable
     private transient boolean selected;
     @Bindable
@@ -41,6 +43,38 @@ public class MovieResult extends BaseObservable {
     private boolean mIsVideo;
     @SerializedName("vote_average")
     private float mVoteAverage;
+
+    public MovieResult() {
+
+    }
+
+    protected MovieResult(Parcel in) {
+        posterPath = in.readString();
+        mIsAdult = in.readByte() != 0;
+        mOverview = in.readString();
+        mReleaseDate = in.readString();
+        mId = in.readString();
+        mOriginalTitle = in.readString();
+        mOriginalLanguage = in.readString();
+        mTitle = in.readString();
+        mBackdropPath = in.readString();
+        mPopularity = in.readFloat();
+        mVoteCount = in.readInt();
+        mIsVideo = in.readByte() != 0;
+        mVoteAverage = in.readFloat();
+    }
+
+    public static final Creator<MovieResult> CREATOR = new Creator<MovieResult>() {
+        @Override
+        public MovieResult createFromParcel(Parcel in) {
+            return new MovieResult(in);
+        }
+
+        @Override
+        public MovieResult[] newArray(int size) {
+            return new MovieResult[size];
+        }
+    };
 
     public boolean isSelected() {
         return selected;
@@ -170,5 +204,27 @@ public class MovieResult extends BaseObservable {
 
     public void setVoteAverage(float mVoteAverage) {
         this.mVoteAverage = mVoteAverage;
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel parcel, int i) {
+        parcel.writeString(posterPath);
+        parcel.writeByte((byte) (mIsAdult ? 1 : 0));
+        parcel.writeString(mOverview);
+        parcel.writeString(mReleaseDate);
+        parcel.writeString(mId);
+        parcel.writeString(mOriginalTitle);
+        parcel.writeString(mOriginalLanguage);
+        parcel.writeString(mTitle);
+        parcel.writeString(mBackdropPath);
+        parcel.writeFloat(mPopularity);
+        parcel.writeInt(mVoteCount);
+        parcel.writeByte((byte) (mIsVideo ? 1 : 0));
+        parcel.writeFloat(mVoteAverage);
     }
 }

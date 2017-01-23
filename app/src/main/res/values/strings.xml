@@ -27,4 +27,6 @@
     <string name="dialog_delete_confirmation">Are you sure to delete details of watch later?</string><string name="banner_ad_unit_id" translatable="false">ca-app-pub-3940256099942544/6300978111</string>
     <string name="no_data_found">Oops! Nothing found here.</string>
     <string name="no_results_found">No results found</string>
+    <string name="upcoming_movies">Upcoming movies</string>
+    <string name="movie_name">Movie name</string>
 </resources>
