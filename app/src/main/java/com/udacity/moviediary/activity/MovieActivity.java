@@ -87,7 +87,9 @@ public class MovieActivity extends BaseActivity implements MovieGalleryCursorAda
         Intent myShareIntent = new Intent(Intent.ACTION_SEND);
         myShareIntent.setType("text/plain");
         myShareIntent.putExtra(Intent.EXTRA_TEXT, getString(R.string.share_app));
-        mShareActionProvider.setShareIntent(myShareIntent);
+        if (mShareActionProvider != null ) {
+            mShareActionProvider.setShareIntent(myShareIntent);
+        }
         return super.onCreateOptionsMenu(menu);
     }
 
