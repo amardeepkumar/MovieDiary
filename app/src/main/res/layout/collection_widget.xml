@@ -1,46 +1,44 @@
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/widget_layout_main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_margin="@dimen/widget_margin">
+    android:layout_margin="@dimen/widget_margin"
+    android:orientation="vertical">
 
     <LinearLayout
-        android:id="@+id/widget_layout_main"
+        android:id="@+id/widget_layout_header"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="#bbDEDFDE"
-        android:orientation="vertical">
-        <LinearLayout
-            android:id="@+id/widget_layout_header"
-            android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/colorPrimaryDark"
+        android:orientation="horizontal"
+        android:paddingLeft="5dp"
+        android:paddingRight="5dp">
+
+        <ImageView
+            android:id="@+id/widget_img_launcher"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:layout_gravity="center_vertical"
+            android:contentDescription="@string/widget_img_launcher"
+            android:src="@mipmap/ic_launcher" />
+
+        <TextView
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:background="#aaDEDFDE"
-            android:orientation="horizontal"
-            android:paddingLeft="5dp"
-            android:paddingRight="5dp">
-            <ImageView
-                android:id="@+id/widget_img_launcher"
-                android:layout_width="32dp"
-                android:layout_height="32dp"
-                android:layout_gravity="center_vertical"
-                android:src="@mipmap/ic_launcher"/>
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/upcoming_movies"
-                android:layout_gravity="center_vertical"
-                android:textColor="@android:color/black"
-                android:textAppearance="?android:attr/textAppearanceMedium"
-                android:textStyle="bold"
-                android:paddingStart="@dimen/widget_header_padding"
-                android:paddingLeft="@dimen/widget_header_padding"
-                android:paddingEnd="@dimen/widget_header_padding"
-                android:paddingRight="@dimen/widget_header_padding"/>
-        </LinearLayout>
-        <ListView
-            android:id="@+id/widget_list"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
-        </ListView>
+            android:layout_gravity="center_vertical"
+            android:paddingEnd="@dimen/widget_header_padding"
+            android:paddingLeft="@dimen/widget_header_padding"
+            android:paddingRight="@dimen/widget_header_padding"
+            android:paddingStart="@dimen/widget_header_padding"
+            android:text="@string/upcoming_movies"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:textColor="@android:color/black"
+            android:textStyle="bold" />
     </LinearLayout>
 
-</FrameLayout>
+    <ListView
+        android:background="@color/colorPrimary"
+        android:id="@+id/widget_list"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
+</LinearLayout>

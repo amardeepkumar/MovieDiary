@@ -29,6 +29,7 @@
             app:imageUrl="@{data.posterPath ?? data.backdropPath}" />
 
         <ImageView
+            android:contentDescription="@string/favourite_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentEnd="true"

@@ -4,7 +4,6 @@
     <string name="sort_by_release_date">Sort by release date</string>
     <string name="sort_by_rating">Sort by rating</string>
     <string name="sort_by_name">Sort by name</string>
-    <string name="list_favourite">List favourite</string>
     <string name="vote_average">Rating : %s/10</string>
     <string name="released_date">Released On : %s</string>
     <string name="movie_details">Movie Details</string>
@@ -29,4 +28,11 @@
     <string name="no_results_found">No results found</string>
     <string name="upcoming_movies">Upcoming movies</string>
     <string name="movie_name">Movie name</string>
+    <string name="favourite_button">Favourite button</string>
+    <string name="watch_history_button">Watch history button</string>
+    <string name="widget_img_launcher">Application icon</string>
+    <string name="enter_multiplex_name">Enter Multiplex Name</string>
+    <string name="enter_date_hint">Enter date</string>
+    <string name="place_hint">Enter Place</string>
+    <string name="friends_name_hint">Enter Friends Name</string>
 </resources>

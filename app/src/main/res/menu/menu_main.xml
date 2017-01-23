@@ -4,7 +4,7 @@
     tools:context=".activity.MainActivity">
     <item
         android:id="@+id/app_bar_search"
-        android:icon="@drawable/ic_search_black_24dp"
+        android:icon="@drawable/ic_search_white_24dp"
         android:iconifiedByDefault="false"
         android:queryHint="Search for movie"
         android:title="@string/search_title"

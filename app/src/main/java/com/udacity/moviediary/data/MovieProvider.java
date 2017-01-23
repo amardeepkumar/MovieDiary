@@ -13,7 +13,7 @@ import android.support.annotation.NonNull;
 public class MovieProvider extends ContentProvider {
 
     // The URI Matcher used by this content provider.
-    private static final UriMatcher sUriMatcher = buildUriMatcher();;
+    private static final UriMatcher sUriMatcher = buildUriMatcher();
     private MovieDbHelper mOpenHelper;
 
     private static final int MOVIE = 100;
@@ -91,7 +91,7 @@ public class MovieProvider extends ContentProvider {
     }
 
     @Override
-    public Cursor query(Uri uri, String[] projection, String selection, String[] selectionArgs,
+    public Cursor query(@NonNull Uri uri, String[] projection, String selection, String[] selectionArgs,
                         String sortOrder) {
         // Here's the switch statement that, given a URI, will determine what kind of request it is,
         // and query the database accordingly.
@@ -182,12 +182,14 @@ public class MovieProvider extends ContentProvider {
             default:
                 throw new UnsupportedOperationException("Unknown uri: " + uri);
         }
-        retCursor.setNotificationUri(getContext().getContentResolver(), uri);
+        if (getContext() != null) {
+            retCursor.setNotificationUri(getContext().getContentResolver(), uri);
+        }
         return retCursor;
     }
 
     @Override
-    public Uri insert(Uri uri, ContentValues values) {
+    public Uri insert(@NonNull Uri uri, ContentValues values) {
         final SQLiteDatabase db = mOpenHelper.getWritableDatabase();
         final int match = sUriMatcher.match(uri);
         Uri returnUri;
@@ -228,12 +230,14 @@ public class MovieProvider extends ContentProvider {
             default:
                 throw new UnsupportedOperationException("Unknown uri: " + uri);
         }
-        getContext().getContentResolver().notifyChange(uri, null);
+        if (getContext() != null) {
+            getContext().getContentResolver().notifyChange(uri, null);
+        }
         return returnUri;
     }
 
     @Override
-    public int delete(Uri uri, String selection, String[] selectionArgs) {
+    public int delete(@NonNull Uri uri, String selection, String[] selectionArgs) {
         final SQLiteDatabase db = mOpenHelper.getWritableDatabase();
         final int match = sUriMatcher.match(uri);
         int rowsDeleted;
@@ -262,14 +266,14 @@ public class MovieProvider extends ContentProvider {
                 throw new UnsupportedOperationException("Unknown uri: " + uri);
         }
         // Because a null deletes all rows
-        if (rowsDeleted != 0) {
+        if (rowsDeleted != 0 && getContext() != null) {
             getContext().getContentResolver().notifyChange(uri, null);
         }
         return rowsDeleted;
     }
 
     @Override
-    public int update(Uri uri, ContentValues values, String selection, String[] selectionArgs) {
+    public int update(@NonNull Uri uri, ContentValues values, String selection, String[] selectionArgs) {
         final SQLiteDatabase db = mOpenHelper.getWritableDatabase();
         final int match = sUriMatcher.match(uri);
         int rowsUpdated;
@@ -294,14 +298,14 @@ public class MovieProvider extends ContentProvider {
             default:
                 throw new UnsupportedOperationException("Unknown uri: " + uri);
         }
-        if (rowsUpdated != 0) {
+        if (rowsUpdated != 0 && getContext() != null) {
             getContext().getContentResolver().notifyChange(uri, null);
         }
         return rowsUpdated;
     }
 
     @Override
-    public int bulkInsert(Uri uri, ContentValues[] values) {
+    public int bulkInsert(@NonNull Uri uri, @NonNull ContentValues[] values) {
         final SQLiteDatabase db = mOpenHelper.getWritableDatabase();
         final int match = sUriMatcher.match(uri);
         int returnCount = 0;
@@ -319,7 +323,9 @@ public class MovieProvider extends ContentProvider {
                 } finally {
                     db.endTransaction();
                 }
-                getContext().getContentResolver().notifyChange(uri, null);
+                if (getContext() != null) {
+                    getContext().getContentResolver().notifyChange(uri, null);
+                }
                 return returnCount;
             case VIDEO:
                 db.beginTransaction();
@@ -334,7 +340,9 @@ public class MovieProvider extends ContentProvider {
                 } finally {
                     db.endTransaction();
                 }
-                getContext().getContentResolver().notifyChange(uri, null);
+                if (getContext() != null) {
+                    getContext().getContentResolver().notifyChange(uri, null);
+                }
                 return returnCount;
             case REVIEW:
                 db.beginTransaction();
@@ -349,7 +357,9 @@ public class MovieProvider extends ContentProvider {
                 } finally {
                     db.endTransaction();
                 }
-                getContext().getContentResolver().notifyChange(uri, null);
+                if (getContext() != null) {
+                    getContext().getContentResolver().notifyChange(uri, null);
+                }
                 return returnCount;
             case WATCH_HISTORY:
                 db.beginTransaction();
@@ -364,7 +374,9 @@ public class MovieProvider extends ContentProvider {
                 } finally {
                     db.endTransaction();
                 }
-                getContext().getContentResolver().notifyChange(uri, null);
+                if (getContext() != null) {
+                    getContext().getContentResolver().notifyChange(uri, null);
+                }
                 return returnCount;
             default:
                 return super.bulkInsert(uri, values);

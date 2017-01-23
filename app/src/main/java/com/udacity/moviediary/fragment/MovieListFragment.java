@@ -4,7 +4,6 @@ import android.content.ContentProviderOperation;
 import android.content.ContentProviderResult;
 import android.content.ContentValues;
 import android.content.Context;
-import android.content.Intent;
 import android.database.Cursor;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
@@ -21,7 +20,6 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.google.firebase.analytics.FirebaseAnalytics;
-import com.udacity.moviediary.MovieDiaryAppWidgetProvider;
 import com.udacity.moviediary.R;
 import com.udacity.moviediary.adapter.MovieGalleryCursorAdapter;
 import com.udacity.moviediary.data.CustomAsyncQueryHandler;
@@ -348,17 +346,6 @@ public class MovieListFragment extends BaseFragment  implements LoaderManager.Lo
                 contentValues[i++] = contentValue;
             }
             queryHandler.startBulkInsert(1, null, MovieContract.MovieEntry.CONTENT_URI, contentValues);
-
-        /*    Intent intent = new Intent(getActivity(), MovieDiaryAppWidgetProvider.class);
-            intent.setAction(AppWidgetManager.ACTION_APPWIDGET_UPDATE);
-            int widgetIDs[] = AppWidgetManager.getInstance(getActivity().getApplication()).getAppWidgetIds(new ComponentName(getActivity().getApplication(),
-                    MovieDiaryAppWidgetProvider.class));
-            intent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS, widgetIDs);
-            getActivity().sendBroadcast(intent)*/;
-
-            Intent intent_meeting_update=new  Intent(getActivity(), MovieDiaryAppWidgetProvider.class);
-            intent_meeting_update.setAction(MovieDiaryAppWidgetProvider.UPDATE_MEETING_ACTION);
-            getActivity().sendBroadcast(intent_meeting_update);
         }
     }
 
