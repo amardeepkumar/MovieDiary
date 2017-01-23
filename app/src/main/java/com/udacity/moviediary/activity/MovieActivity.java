@@ -6,11 +6,14 @@ import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.widget.SearchView;
+import android.support.v7.widget.ShareActionProvider;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
+import android.view.MenuItem;
 
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
@@ -29,6 +32,7 @@ import com.udacity.moviediary.utility.PreferenceManager;
 public class MovieActivity extends BaseActivity implements MovieGalleryCursorAdapter.OnItemClickListener, SearchView.OnQueryTextListener {
     private static final String TAG = MovieActivity.class.getSimpleName();
     private MovieDetailFragment mMovieDetailFragment;
+    private ShareActionProvider mShareActionProvider;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -78,7 +82,12 @@ public class MovieActivity extends BaseActivity implements MovieGalleryCursorAda
             searchView.setSubmitButtonEnabled(true);
             searchView.setOnQueryTextListener(this);
         }
-
+        MenuItem item = menu.findItem(R.id.menu_item_share);
+        mShareActionProvider = (ShareActionProvider) MenuItemCompat.getActionProvider(item);
+        Intent myShareIntent = new Intent(Intent.ACTION_SEND);
+        myShareIntent.setType("text/plain");
+        myShareIntent.putExtra(Intent.EXTRA_TEXT, getString(R.string.share_app));
+        mShareActionProvider.setShareIntent(myShareIntent);
         return super.onCreateOptionsMenu(menu);
     }
 

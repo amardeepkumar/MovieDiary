@@ -27,4 +27,9 @@
             android:id="@+id/sort_by_name"
             android:title="@string/sort_by_name" />
     </group>
+    <item
+        android:id="@+id/menu_item_share"
+        app:actionProviderClass="android.support.v7.widget.ShareActionProvider"
+        android:title="@string/share_application"
+        app:showAsAction="ifRoom" />
 </menu>

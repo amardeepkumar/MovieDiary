@@ -8,11 +8,11 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.app.AlertDialog;
 
-import com.google.firebase.analytics.FirebaseAnalytics;
 import com.udacity.moviediary.R;
 import com.udacity.moviediary.data.CustomAsyncQueryHandler;
 import com.udacity.moviediary.data.MovieContract;
 import com.udacity.moviediary.utility.Constants;
+import com.udacity.moviediary.utility.FireBaseManager;
 
 /**
  * Created by Amardeep Kumar on 1/21/2017.
@@ -21,7 +21,6 @@ import com.udacity.moviediary.utility.Constants;
 public class WatchHistoryDeleteConfirmationFragment extends DialogFragment {
 
     private OnDeleteListener mOnDeleteListener;
-    private FirebaseAnalytics mFireBaseAnalytics;
 
     public interface OnDeleteListener {
         void OnDelete();
@@ -39,7 +38,6 @@ public class WatchHistoryDeleteConfirmationFragment extends DialogFragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mFireBaseAnalytics = FirebaseAnalytics.getInstance(getActivity());
     }
 
     @Override
@@ -80,7 +78,7 @@ public class WatchHistoryDeleteConfirmationFragment extends DialogFragment {
                 ///***********Analytics code start*****************
                 Bundle params = new Bundle();
                 params.putString(Constants.AnalyticsKeys.MOVIE_ID, mMovieId);
-                mFireBaseAnalytics.logEvent(Constants.AnalyticsKeys.WATCH_HISTORY_DELETED, params);
+                FireBaseManager.getFireBaseAnalytics().logEvent(Constants.AnalyticsKeys.WATCH_HISTORY_DELETED, params);
                 //************Analytics code end*******************
                 dismiss();
                 mOnDeleteListener.OnDelete();

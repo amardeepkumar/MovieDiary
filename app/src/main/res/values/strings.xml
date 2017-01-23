@@ -35,4 +35,6 @@
     <string name="enter_date_hint">Enter date</string>
     <string name="place_hint">Enter Place</string>
     <string name="friends_name_hint">Enter Friends Name</string>
+    <string name="share_application">Share app name</string>
+    <string name="share_app">Hey Friend! I am using MovieDiary app. Saving the Fav movie list in style! :)</string>
 </resources>

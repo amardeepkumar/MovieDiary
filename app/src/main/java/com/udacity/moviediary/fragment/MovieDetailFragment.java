@@ -19,7 +19,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.google.firebase.analytics.FirebaseAnalytics;
 import com.udacity.moviediary.R;
 import com.udacity.moviediary.data.CustomAsyncQueryHandler;
 import com.udacity.moviediary.data.MovieContract;
@@ -36,6 +35,7 @@ import com.udacity.moviediary.utility.CollectionUtils;
 import com.udacity.moviediary.utility.Constants;
 import com.udacity.moviediary.utility.DatabaseUtils;
 import com.udacity.moviediary.utility.DialogUtils;
+import com.udacity.moviediary.utility.FireBaseManager;
 import com.udacity.moviediary.utility.NetworkUtil;
 
 import java.util.ArrayList;
@@ -95,7 +95,6 @@ public class MovieDetailFragment extends BaseFragment implements View.OnClickLis
     private Cursor mCursor;
     private LayoutInflater mInflater;
     private AtomicInteger mResponseCount;//Counter to reload cursor after all API response
-    private FirebaseAnalytics mFireBaseAnalytics;
 
     public static MovieDetailFragment getInstance(String movieId) {
         MovieDetailFragment fragment = new MovieDetailFragment();
@@ -129,7 +128,6 @@ public class MovieDetailFragment extends BaseFragment implements View.OnClickLis
             }
         }
         mResponseCount = new AtomicInteger(0);
-        mFireBaseAnalytics = FirebaseAnalytics.getInstance(getActivity());
     }
 
     @Nullable
@@ -164,7 +162,7 @@ public class MovieDetailFragment extends BaseFragment implements View.OnClickLis
             ///***********Analytics code start*****************
             Bundle params = new Bundle();
             params.putString(Constants.AnalyticsKeys.MOVIE_ID, mMovieId + "");
-            mFireBaseAnalytics.logEvent(Constants.AnalyticsKeys.LOAD_MOVIE_DETAILS, params);
+            FireBaseManager.getFireBaseAnalytics().logEvent(Constants.AnalyticsKeys.LOAD_MOVIE_DETAILS, params);
             //************Analytics code end*******************
 
             NetworkManager.requestMovieTrailers(mMovieId, new Callback<MovieVideoResponse>() {
@@ -228,7 +226,7 @@ public class MovieDetailFragment extends BaseFragment implements View.OnClickLis
                     params = new Bundle();
                     params.putString(Constants.AnalyticsKeys.MOVIE_ID, mMovieId);
                     params.putBoolean(Constants.AnalyticsKeys.IS_FAVOURITE, favourite);
-                    mFireBaseAnalytics.logEvent(Constants.AnalyticsKeys.MOVIE_DETAILS_FAV_CLICKED, params);
+                    FireBaseManager.getFireBaseAnalytics().logEvent(Constants.AnalyticsKeys.MOVIE_DETAILS_FAV_CLICKED, params);
                     //************Analytics code end*******************
                 }
                 break;
@@ -236,7 +234,7 @@ public class MovieDetailFragment extends BaseFragment implements View.OnClickLis
                 ///***********Analytics code start*****************
                 params = new Bundle();
                 params.putString(Constants.AnalyticsKeys.MOVIE_ID, mMovieId);
-                mFireBaseAnalytics.logEvent(Constants.AnalyticsKeys.TRAILER_CLICKED, params);
+                FireBaseManager.getFireBaseAnalytics().logEvent(Constants.AnalyticsKeys.TRAILER_CLICKED, params);
                 //************Analytics code end*******************
                 final Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("vnd.youtube://" + v.getTag()));
                 intent.putExtra("force_fullscreen", true);
@@ -251,7 +249,7 @@ public class MovieDetailFragment extends BaseFragment implements View.OnClickLis
                 ///***********Analytics code start*****************
                 params = new Bundle();
                 params.putString(Constants.AnalyticsKeys.MOVIE_ID, mMovieId);
-                mFireBaseAnalytics.logEvent(Constants.AnalyticsKeys.WATCH_HISTORY_CLICKED, params);
+                FireBaseManager.getFireBaseAnalytics().logEvent(Constants.AnalyticsKeys.WATCH_HISTORY_CLICKED, params);
                 //************Analytics code end*******************
                 WatchHistoryFragment.getInstance(mMovieId).show(getFragmentManager(), HISTORY_FRAGMENT_TAG);
                 break;

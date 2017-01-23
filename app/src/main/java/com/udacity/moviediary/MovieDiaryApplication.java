@@ -2,6 +2,7 @@ package com.udacity.moviediary;
 
 import android.app.Application;
 
+import com.udacity.moviediary.utility.FireBaseManager;
 import com.udacity.moviediary.utility.PreferenceManager;
 
 /**
@@ -13,5 +14,6 @@ public class MovieDiaryApplication extends Application {
     public void onCreate() {
         super.onCreate();
         PreferenceManager.init(getApplicationContext());
+        FireBaseManager.init(getApplicationContext());
     }
 }
